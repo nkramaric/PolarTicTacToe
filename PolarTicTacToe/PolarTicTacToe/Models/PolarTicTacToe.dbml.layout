@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="PolarTicTacToe">
+  <DataContextMoniker Name="/PolarTicTacToeDataContext" />
+  <nestedChildShapes>
+    <classShape Id="1e18e8e1-cbe4-429d-8025-45ac3da2a115" absoluteBounds="6.625, 0.875, 2, 2.1554996744791666">
+      <DataClassMoniker Name="/PolarTicTacToeDataContext/Game" />
+      <nestedChildShapes>
+        <elementListCompartment Id="79a17d1a-dadf-4e74-8523-8eb669c31912" absoluteBounds="6.6400000000000006, 1.335, 1.9700000000000002, 1.5954996744791665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="022ea54e-9315-48e6-ae3c-786b200458b4" absoluteBounds="3, 1.375, 2, 1.5785953776041666">
+      <DataClassMoniker Name="/PolarTicTacToeDataContext/Player" />
+      <nestedChildShapes>
+        <elementListCompartment Id="a9e2b249-b8fd-469e-bd17-6c3fcdd12930" absoluteBounds="3.015, 1.835, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(5 : 2.16429768880208); (6.625 : 2.16429768880208)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/PolarTicTacToeDataContext/Player/Player_Game" />
+      <nodes>
+        <classShapeMoniker Id="022ea54e-9315-48e6-ae3c-786b200458b4" />
+        <classShapeMoniker Id="1e18e8e1-cbe4-429d-8025-45ac3da2a115" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(5 : 1.70714884440104); (6.625 : 1.70714884440104)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/PolarTicTacToeDataContext/Player/Player_Game1" />
+      <nodes>
+        <classShapeMoniker Id="022ea54e-9315-48e6-ae3c-786b200458b4" />
+        <classShapeMoniker Id="1e18e8e1-cbe4-429d-8025-45ac3da2a115" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(5 : 2.62144653320312); (6.625 : 2.62144653320312)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/PolarTicTacToeDataContext/Player/Player_Game2" />
+      <nodes>
+        <classShapeMoniker Id="022ea54e-9315-48e6-ae3c-786b200458b4" />
+        <classShapeMoniker Id="1e18e8e1-cbe4-429d-8025-45ac3da2a115" />
+      </nodes>
+    </associationConnector>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>
