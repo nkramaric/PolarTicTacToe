@@ -7,5 +7,6 @@ namespace PolarTicTacToe.Utils
 {
     public class GlobalVars
     {
+        public const String FB_APP_ID = "342700949110604";
     }
 }

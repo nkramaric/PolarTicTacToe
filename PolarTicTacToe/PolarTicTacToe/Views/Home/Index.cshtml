@@ -2,8 +2,88 @@
     ViewBag.Title = "Home Page";
 }
 
+<div id="fb-root">
+<script>
+    var fbAppID = 342700949110604;
+
+    $(document).ready(function () {
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: fbAppID,
+                status: true, // check login status
+                cookie: true, // enable cookies to allow the server to access the session
+                //channelUrl: window.location.protocol + "//" + window.location.hostname + "/fbchannel.html",
+                channelUrl: 'http://ec2-23-21-169-98.compute-1.amazonaws.com/channel.html', // Channel File
+                oauth: true //enables OAuth 2.0
+            });
+
+            // Additional initialization code here
+            FB.getLoginStatus(function (response) {
+
+                if (response.status === 'connected') {
+                    // the user is logged in and connected to your
+                    // app, and response.authResponse supplies
+                    // the user's ID, a valid access token, a signed
+                    // request, and the time the access token 
+                    // and signed request each expire
+                    var uid = response.authResponse.userID;
+                    var accessToken = response.authResponse.accessToken;
+                    //alert('the user is logged in and connected ' + uid);
+                } else if (response.status === 'not_authorized') {
+                    // the user is logged in to Facebook, 
+                    //but not connected to the app
+                    //alert('not connected to the app ');
+                } else {
+                    // the user isn't even logged in to Facebook.
+                    //alert('the user is not  logged in to Facebook.');
+                }
+
+                FB.api('/me', function (user) {
+                    console.log(user);
+                    if (user) {
+                        var image = document.getElementById('image');
+                        image.src = 'http://graph.facebook.com/' + user.id + '/picture'
+                        var name = document.getElementById('name');
+                        if (user.name !== undefined) {
+                            name.innerHTML = "Wolcome " + user.name;
+
+                            $.ajax({ url: "/home/register", data: { facebookID: user.id, firstName: user.first_name, lastName: user.last_name }, async: true, dataType: "json", type: "post", success: function (data) { } });
+                        }
+                    }
+                });
+
+            });
+        };
+    });
+
+    (function () {
+        var e = document.createElement('script');
+        e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js#xfbml=1';
+        //e.src = document.location.protocol + '//cbeta.grosocial.com/assets/js/facebook/en_US_all_3.js#xfbml=1'; // Load a cached version for now
+        e.async = true;
+        document.getElementById('fb-root').appendChild(e);
+    } ());
+
+    function Register() {
+        alert("you saucy fuck");
+    }  
+
+</script>
 
 <h2>Template</h2>
 <p>
 	Konrad Group Template
 </p>
+
+@ViewBag.access_token
+
+<a href="https://www.facebook.com/dialog/oauth?client_id=@PolarTicTacToe.Utils.GlobalVars.FB_APP_ID&redirect_uri=http://localhost:57205/home/register">Register</a>
+
+<button onclick="Register()" id="register-button">Register</button>
+
+
+<img id="image"/>
+   
+
+<p id="name" style="padding-bottom:7px; font-weight:bold; font-size:13px;" color="white"></p>
+    
