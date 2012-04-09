@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Text;
 using PolarTicTacToe.Models;
+using System.Web.Security;
 
 namespace PolarTicTacToe.Controllers
 {
@@ -23,10 +24,15 @@ namespace PolarTicTacToe.Controllers
         [HttpPost]
         public ActionResult Register(long facebookID, string firstName, string lastName)
         {
-            var curPlayer = Player.Get(facebookID);
-            
+            Player curPlayer = Player.Get(facebookID);
+
             if (curPlayer == null)
+            {
                 Player.Create(facebookID, firstName, lastName);
+                curPlayer = Player.Get(facebookID);
+            }
+
+            FormsAuthentication.SetAuthCookie(facebookID.ToString(), false /* createPersistentCookie */);
 
             return Json(true, JsonRequestBehavior.DenyGet);
         }

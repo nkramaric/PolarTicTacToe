@@ -11,6 +11,26 @@ namespace PolarTicTacToe.Utils
         {
             ///TODO: implement this
             winner = null;
+
+            if (game.MoveList.Count < 7)
+            {
+                return false;
+            }
+
+            if (CheckHorizontal(game))
+            {
+
+            }
+
+            return false;
+        }
+
+        private bool CheckHorizontal(Models.Game game)
+        {
+            var lastMove = game.MoveList.Last();
+            int player = game.MoveList.Last().UserID;
+
+            //if (game.Position(lastMove.position
             return false;
         }
 
