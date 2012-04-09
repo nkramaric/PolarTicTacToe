@@ -31,7 +31,7 @@ namespace PolarTicTacToe.Models
             }
             else
             {
-                string move = spot.Item1 + ";" + spot.Item2 + ";" + String.Format("{0:M/d/yy t}", DateTime.Now) + ","; 
+                string move = spot.Item1 + ";" + spot.Item2 + ";" + String.Format("{0:g}", DateTime.Now) + ","; 
                 game.Moves = game.Moves ?? "";
                 game.Moves += move;
                 
@@ -71,7 +71,7 @@ namespace PolarTicTacToe.Models
                     string[] splitMove = curMove.Split(';');
                     int x = int.Parse(splitMove[0]);
                     int y = int.Parse(splitMove[1]);
-                    DateTime time = DateTime.ParseExact(splitMove[2], "M/d/yy t", provider);
+                    DateTime time = DateTime.Parse(splitMove[2], provider);
                     MoveList.Add(new Move() { position = new Tuple<int, int>(x, y), time = time, UserID = userID.Value });
                     userID = userID == ChallengerID ? OpponentID : ChallengerID;
                 }
@@ -80,5 +80,20 @@ namespace PolarTicTacToe.Models
             }
         }
 
+
+        public int PendingPlayerID 
+        { 
+            get 
+            {
+                if (String.IsNullOrWhiteSpace(Moves))
+                {
+                    return ChallengerID;
+                }
+                else
+                {
+                    return MoveList.Last().UserID == ChallengerID ? OpponentID.Value : ChallengerID;
+                }
+            } 
+        }
     }
 }

@@ -131,6 +131,7 @@
     <None Include="Models\PolarTicTacToe.dbml.layout">
       <DependentUpon>PolarTicTacToe.dbml</DependentUpon>
     </None>
+    <Content Include="Views\Game\Play.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />

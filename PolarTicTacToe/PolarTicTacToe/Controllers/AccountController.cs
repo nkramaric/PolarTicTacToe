@@ -28,8 +28,8 @@ namespace PolarTicTacToe.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (Membership.ValidateUser(model.UserName, model.Password))
-                {
+                //if (Membership.ValidateUser(model.UserName, model.Password))
+                //{
                     FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
                     if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
                         && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
@@ -40,11 +40,11 @@ namespace PolarTicTacToe.Controllers
                     {
                         return RedirectToAction("Index", "Home");
                     }
-                }
-                else
-                {
-                    ModelState.AddModelError("", "The user name or password provided is incorrect.");
-                }
+                //}
+                //else
+                //{
+                //    ModelState.AddModelError("", "The user name or password provided is incorrect.");
+                //}
             }
 
             // If we got this far, something failed, redisplay form

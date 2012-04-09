@@ -13,7 +13,7 @@ namespace PolarTicTacToe.Controllers
         {
             if (CurrentUser != null)
             {
-                ViewData["cur_user"] = CurrentUser;
+                ViewBag.User = CurrentUser;
                 if (CurrentUser != null)
                 {
                     ViewData["user_id"] = CurrentUser.FacebookID;

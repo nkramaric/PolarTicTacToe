@@ -23,19 +23,34 @@ namespace PolarTicTacToe.Controllers
         {
             Game game = Game.Get(id);
 
+            ViewBag.Game = game;
+
             return View(game);
         }
 
-        public ActionResult PlayMove(int id, int player, Tuple<int, int> spot)
+        [HttpPost]
+        public ActionResult PlayMove(int id, int x, int y)
         {
             int? winner;
             string message;
-            bool isValid = Game.PlayMove(id, player, spot, out winner, out message);
 
-            return View();
+            Game game = Game.Get(id);
+
+            Tuple<int, int> spot = new Tuple<int, int>(x, y);
+
+            if (game.PendingPlayerID == CurrentUser.ID)
+            {
+                bool isValid = Game.PlayMove(id, CurrentUser.ID, spot, out winner, out message);
+            }
+            else
+            {
+                return Json(false, JsonRequestBehavior.DenyGet);
+            }
+
+            return Json(true, JsonRequestBehavior.DenyGet);
         }
 
-        [HttpPost]
+        [HttpGet]
         public ActionResult Create()
         {
             PolarTicTacToeDataContext dataContext = new PolarTicTacToeDataContext();
