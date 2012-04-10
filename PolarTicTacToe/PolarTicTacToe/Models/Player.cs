@@ -55,11 +55,18 @@ namespace PolarTicTacToe.Models
             dataContext.SubmitChanges();
         }
 
-        internal static Player Get(long facebookID)
+        internal static Player GetByFBID(long facebookID)
         {
             PolarTicTacToeDataContext dataContext = new PolarTicTacToeDataContext();
 
             return (from p in dataContext.Players where p.FacebookID == facebookID select p).FirstOrDefault();
+        }
+
+        internal static Player GetByID(long ID)
+        {
+            PolarTicTacToeDataContext dataContext = new PolarTicTacToeDataContext();
+
+            return (from p in dataContext.Players where p.ID == ID select p).FirstOrDefault();
         }
     }
 }

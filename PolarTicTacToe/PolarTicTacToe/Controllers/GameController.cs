@@ -49,16 +49,37 @@ namespace PolarTicTacToe.Controllers
 
             return Json(true, JsonRequestBehavior.DenyGet);
         }
+        
+        [HttpPost]
+        public ActionResult Get(long FBID1, long FBID2)
+        {
+            var player1 = Player.GetByFBID(FBID1);
+            var player2 = Player.GetByFBID(FBID2);
+
+            long? pendingPlayerFBID = null;
+
+            if (player1 != null && player2 != null)
+            {
+                Game curGame = Game.GetActive(player1.ID, player2.ID);
+                if (curGame != null)
+                {
+                    pendingPlayerFBID = Player.GetByID(curGame.PendingPlayerID).FacebookID;
+                }
+            }
+            
+            return Json(pendingPlayerFBID, JsonRequestBehavior.DenyGet);
+        }
+
 
         [HttpGet]
         public ActionResult Create(long OpponentFBID)
         {
             // if the opponent doesnt exist create it
-            var Opponent = Player.Get(OpponentFBID);
+            var Opponent = Player.GetByFBID(OpponentFBID);
             if (Opponent == null)
                 Opponent = Player.Create(OpponentFBID);
 
-            // first check for an existing active game
+            // if an active game doesnt exist create it
             var curGame = Game.GetActive(CurrentUser.ID, Opponent.ID);
             if (curGame == null)
                 curGame = Game.Create(CurrentUser.ID, Opponent.ID);
