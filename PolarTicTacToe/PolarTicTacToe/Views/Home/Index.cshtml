@@ -2,10 +2,11 @@
     ViewBag.Title = "Home Page";
 }
 
-<div id="fb-root">
+<div id="fb-root"></div>
 <script>
     var fbAppID = 342700949110604;
     var userFriends;
+    var userFBID;
 
     $(document).ready(function () {
         window.fbAsyncInit = function () {
@@ -46,7 +47,7 @@
                         var name = document.getElementById('name');
                         if (user.name !== undefined) {
                             name.innerHTML = "Wolcome " + user.name;
-
+                            userFBID = user.id;
                             $.ajax({ url: "/home/register", data: { facebookID: user.id, firstName: user.first_name, lastName: user.last_name }, async: true, dataType: "json", type: "post", success: function (data) { } });
                         }
                     }
@@ -57,7 +58,7 @@
                     //console.log(friends);
                     var vPool = ""; 
                     jQuery.each(userFriends.data, function (i, val) {
-                        vPool += '<li><a href="#" onclick="Invite(' + val.id + ')">' + val.name + '</a></li>';
+                        vPool += '<li><a onclick="Invite(' + val.id + ')">' + val.name + '</a></li>';
                     });
                     $('#friendsList').html(vPool);
                     vPool = "";
@@ -70,13 +71,16 @@
     function Invite(id) {
         FB.ui({
             method: 'send',
+            redirect_uri: '@PolarTicTacToe.Utils.GlobalVars.WEBSITE_URL'+'/game/create?OpponentFBID='+id,
             name: 'Come PLay Polar TicTacToe',
-            link: '@PolarTicTacToe.Utils.GlobalVars.WEBSITE_URL',
+            link: 'http://www.gameonz.com/',
             to: id,
             picture: 'http://a1.phobos.apple.com/us/r1000/030/Purple/d5/0f/0c/mzl.kfxfoyju.480x480-75.jpg',
             name: 'Polar TicTacToe',
             description: 'You suck! I can beat you at everything! Even this one!',
         });
+
+        //window.location =  
     }  
 
     (function () {

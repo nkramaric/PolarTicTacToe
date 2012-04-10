@@ -51,19 +51,19 @@ namespace PolarTicTacToe.Controllers
         }
 
         [HttpGet]
-        public ActionResult Create()
+        public ActionResult Create(long OpponentFBID)
         {
-            PolarTicTacToeDataContext dataContext = new PolarTicTacToeDataContext();
+            // if the opponent doesnt exist create it
+            var Opponent = Player.Get(OpponentFBID);
+            if (Opponent == null)
+                Opponent = Player.Create(OpponentFBID);
 
-            Game newGame = new Game();
-            newGame.ChallengerID = CurrentUser.ID;
-            newGame.GameState = GameState.Active.ToString();
+            // first check for an existing active game
+            var curGame = Game.GetActive(CurrentUser.ID, Opponent.ID);
+            if (curGame == null)
+                curGame = Game.Create(CurrentUser.ID, Opponent.ID);
 
-            dataContext.Games.InsertOnSubmit(newGame);
-
-            dataContext.SubmitChanges();
-
-            return RedirectToAction("Play", "Game", new { id = newGame.ID });
+            return RedirectToAction("Play", "Game", new { id = curGame.ID });
         }
 
     }

@@ -9,11 +9,35 @@ namespace PolarTicTacToe.Models
 {
     public partial class Game
     {
+        public static Game Create(int ChallengerID, int OpponentID)
+        {
+            PolarTicTacToeDataContext dataContext = new PolarTicTacToeDataContext();
+
+            Game newGame = new Game();
+            newGame.ChallengerID = ChallengerID;
+            newGame.OpponentID = OpponentID;
+
+            newGame.GameState = Utils.GameState.Active.ToString();
+
+            dataContext.Games.InsertOnSubmit(newGame);
+
+            dataContext.SubmitChanges();
+
+            return newGame;
+        }
+
         internal static Game Get(int id)
         {
             PolarTicTacToeDataContext dataContext = new PolarTicTacToeDataContext();
 
             return (from p in dataContext.Games where p.ID == id select p).FirstOrDefault();
+        }
+
+        internal static Game GetActive(long FBID1, long FBID2)
+        {
+            PolarTicTacToeDataContext dataContext = new PolarTicTacToeDataContext();
+
+            return (from p in dataContext.Games where p.GameState == Utils.GameState.Active.ToString() && (p.OpponentID == FBID1 && p.ChallengerID == FBID2) || (p.ChallengerID == FBID1 && p.OpponentID == FBID2) select p).FirstOrDefault();
         }
 
         internal static bool PlayMove(int id, int player, Tuple<int, int> spot, out int? winner, out string message)
