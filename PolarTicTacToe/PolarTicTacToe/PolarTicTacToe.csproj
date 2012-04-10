@@ -94,6 +94,7 @@
     <Content Include="Assets\bootstrap\js\bootstrap.js" />
     <Content Include="Assets\bootstrap\js\bootstrap.min.js" />
     <Content Include="Assets\css\site.css" />
+    <Content Include="Assets\js\game.js" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -117,7 +118,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Assets\img\" />
-    <Folder Include="Assets\js\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

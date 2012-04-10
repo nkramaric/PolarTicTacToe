@@ -2,8 +2,15 @@
     ViewBag.Title = "Play";
 }
 
-<h2>Play</h2>
+@section ExtraHeaderContent {
+<script type="text/javascript" src="https://raw.github.com/DmitryBaranovskiy/raphael/master/raphael-min.js"></script>
+}
 
+@section FooterScripts {
+<script type="text/javascript" src="/assets/js/game.js"></script>
+}
+
+<h2>Play</h2>
 
 <form action="/game/@ViewBag.Game.ID/playmove" method="post">
     x: <input type="text" name="x" />
