@@ -49,6 +49,8 @@
                         if (user.name !== undefined) {
                             name.innerHTML = "Welcome " + user.name;
                             userFBID = user.id;
+                            $("#registerLink").hide();
+
                             $.ajax({ url: "/home/register", data: { facebookID: user.id, firstName: user.first_name, lastName: user.last_name }, async: true, dataType: "json", type: "post", success: function (data) { } });
                         }
                     }
@@ -121,7 +123,7 @@
 
 @ViewBag.access_token
 
-<a href="https://www.facebook.com/dialog/oauth?client_id=@PolarTicTacToe.Utils.GlobalVars.FB_APP_ID&redirect_uri=@PolarTicTacToe.Utils.GlobalVars.WEBSITE_URL">Register</a>
+<a id="registerLink" href="https://www.facebook.com/dialog/oauth?client_id=@PolarTicTacToe.Utils.GlobalVars.FB_APP_ID&redirect_uri=@PolarTicTacToe.Utils.GlobalVars.WEBSITE_URL">Register</a>
 
 <img id="image"/>  
 
