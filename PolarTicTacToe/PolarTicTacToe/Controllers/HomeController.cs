@@ -24,7 +24,7 @@ namespace PolarTicTacToe.Controllers
         [HttpPost]
         public ActionResult Register(long facebookID, string firstName, string lastName)
         {
-            Player curPlayer = Player.Get(facebookID);
+            Player curPlayer = Player.GetByFBID(facebookID);
 
             if (curPlayer == null)
             {

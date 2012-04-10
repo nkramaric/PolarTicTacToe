@@ -33,11 +33,11 @@ namespace PolarTicTacToe.Models
             return (from p in dataContext.Games where p.ID == id select p).FirstOrDefault();
         }
 
-        internal static Game GetActive(long FBID1, long FBID2)
+        internal static Game GetActive(int ID1, int ID2)
         {
             PolarTicTacToeDataContext dataContext = new PolarTicTacToeDataContext();
 
-            return (from p in dataContext.Games where p.GameState == Utils.GameState.Active.ToString() && (p.OpponentID == FBID1 && p.ChallengerID == FBID2) || (p.ChallengerID == FBID1 && p.OpponentID == FBID2) select p).FirstOrDefault();
+            return (from p in dataContext.Games where p.GameState == Utils.GameState.Active.ToString() && (p.OpponentID == ID1 && p.ChallengerID == ID2) || (p.ChallengerID == ID1 && p.OpponentID == ID2) select p).FirstOrDefault();
         }
 
         internal static bool PlayMove(int id, int player, Tuple<int, int> spot, out int? winner, out string message)
@@ -147,6 +147,5 @@ namespace PolarTicTacToe.Models
                 return GetPosition(coordinate.X, coordinate.Y).UserID;
             }
         }
-
     }
 }

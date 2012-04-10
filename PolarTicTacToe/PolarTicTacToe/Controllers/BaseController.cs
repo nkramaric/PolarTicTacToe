@@ -34,7 +34,7 @@ namespace PolarTicTacToe.Controllers
             {
                 if (currentUser == null)
                 {
-                    currentUser = Player.Get(long.Parse(User.Identity.Name));
+                    currentUser = Player.GetByFBID(long.Parse(User.Identity.Name));
                 }
 
                 return currentUser;
