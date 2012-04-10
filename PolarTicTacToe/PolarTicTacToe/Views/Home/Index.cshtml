@@ -5,6 +5,7 @@
 <div id="fb-root">
 <script>
     var fbAppID = 342700949110604;
+    var userFriends;
 
     $(document).ready(function () {
         window.fbAsyncInit = function () {
@@ -51,13 +52,32 @@
                     }
                 });
 
-                FB.api('/me/friends', function (user) {
-                    console.log(user);
-                    
+                FB.api('/me/friends', function (friends) {
+                    userFriends = friends;
+                    //console.log(friends);
+                    var vPool = ""; 
+                    jQuery.each(userFriends.data, function (i, val) {
+                        vPool += '<li><a href="#" onclick="Invite(' + val.id + ')">' + val.name + '</a></li>';
+                    });
+                    $('#friendsList').html(vPool);
+                    vPool = "";
                 });
+
             });
         };
     });
+
+    function Invite(id) {
+        FB.ui({
+            method: 'send',
+            name: 'Come PLay Polar TicTacToe',
+            link: '@PolarTicTacToe.Utils.GlobalVars.WEBSITE_URL',
+            to: id,
+            picture: 'http://a1.phobos.apple.com/us/r1000/030/Purple/d5/0f/0c/mzl.kfxfoyju.480x480-75.jpg',
+            name: 'Polar TicTacToe',
+            description: 'You suck! I can beat you at everything! Even this one!',
+        });
+    }  
 
     (function () {
         var e = document.createElement('script');
@@ -85,8 +105,10 @@
 <button onclick="Register()" id="register-button">Register</button>
 
 
-<img id="image"/>
-   
+<img id="image"/>  
 
 <p id="name" style="padding-bottom:7px; font-weight:bold; font-size:13px;" color="white"></p>
-    
+
+<ul id="friendsList">
+
+</ul>   
