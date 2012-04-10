@@ -28,8 +28,11 @@ namespace PolarTicTacToe.Controllers
 
             if (curPlayer == null)
             {
-                Player.Create(facebookID, firstName, lastName);
-                curPlayer = Player.Get(facebookID);
+                curPlayer = Player.Create(facebookID, firstName, lastName);
+            }
+            else
+            {
+                Player.Edit(facebookID, firstName, lastName);
             }
 
             FormsAuthentication.SetAuthCookie(facebookID.ToString(), false /* createPersistentCookie */);
