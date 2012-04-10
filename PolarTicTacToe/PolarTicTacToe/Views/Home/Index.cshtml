@@ -39,7 +39,6 @@
                 }
 
                 FB.api('/me', function (user) {
-                    console.log(user);
                     if (user) {
                         var image = document.getElementById('image');
                         image.src = 'http://graph.facebook.com/' + user.id + '/picture'
@@ -52,6 +51,10 @@
                     }
                 });
 
+                FB.api('/me/friends', function (user) {
+                    console.log(user);
+                    
+                });
             });
         };
     });
@@ -77,7 +80,7 @@
 
 @ViewBag.access_token
 
-<a href="https://www.facebook.com/dialog/oauth?client_id=@PolarTicTacToe.Utils.GlobalVars.FB_APP_ID&redirect_uri=http://localhost:57205">Register</a>
+<a href="https://www.facebook.com/dialog/oauth?client_id=@PolarTicTacToe.Utils.GlobalVars.FB_APP_ID&redirect_uri=@PolarTicTacToe.Utils.GlobalVars.WEBSITE_URL">Register</a>
 
 <button onclick="Register()" id="register-button">Register</button>
 
