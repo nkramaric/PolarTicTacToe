@@ -47,7 +47,7 @@
                         if (user.name !== undefined) {
                             name.innerHTML = "Wolcome " + user.name;
 
-                            $.ajax({ url: "/home/register", data: { facebookID: user.id, firstName: user.first_name, lastName: user.last_name }, async: true, dataType: "json", type: "post", success: function (data) { } });
+                            //$.ajax({ url: "/home/register", data: { facebookID: user.id, firstName: user.first_name, lastName: user.last_name }, async: true, dataType: "json", type: "post", success: function (data) { } });
                         }
                     }
                 });

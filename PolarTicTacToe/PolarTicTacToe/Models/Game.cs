@@ -72,7 +72,7 @@ namespace PolarTicTacToe.Models
                     int x = int.Parse(splitMove[0]);
                     int y = int.Parse(splitMove[1]);
                     DateTime time = DateTime.Parse(splitMove[2], provider);
-                    MoveList.Add(new Move() { position = new Tuple<int, int>(x, y), time = time, UserID = userID.Value });
+                    MoveList.Add(new Move() { position = new Coordinate(x, y), time = time, UserID = userID.Value });
                     userID = userID == ChallengerID ? OpponentID : ChallengerID;
                 }
 
@@ -95,5 +95,34 @@ namespace PolarTicTacToe.Models
                 }
             } 
         }
+
+        public Move GetPosition(int x, int y)
+        {
+            Move item;
+
+            if ((item = MoveList.FirstOrDefault(p => p.position.X == x && p.position.Y == y)) == null)
+            {
+                item = new Move() { position = new Coordinate(x, y), UserID = null };
+            }
+
+            return item;
+        }
+
+        public int? this[int x, int y]
+        {
+            get
+            {
+                return GetPosition(x, y).UserID;
+            }
+        }
+
+        public int? this[Coordinate coordinate]
+        {
+            get
+            {
+                return GetPosition(coordinate.X, coordinate.Y).UserID;
+            }
+        }
+
     }
 }

@@ -83,6 +83,7 @@
     <Compile Include="Utils\GameRules.cs" />
     <Compile Include="Utils\GameState.cs" />
     <Compile Include="Utils\GlobalVars.cs" />
+    <Compile Include="Utils\Coordinate.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\bootstrap\css\bootstrap-responsive.css" />

@@ -38,7 +38,7 @@ namespace PolarTicTacToe.Controllers
 
             Tuple<int, int> spot = new Tuple<int, int>(x, y);
 
-            if (game.PendingPlayerID == CurrentUser.ID)
+            if (game.PendingPlayerID == CurrentUser.ID && game.GameState != GameState.Finished.ToString())
             {
                 bool isValid = Game.PlayMove(id, CurrentUser.ID, spot, out winner, out message);
             }

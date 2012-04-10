@@ -12,6 +12,9 @@
 
 <h2>Play</h2>
 
+<p>Moves: <br /> @Html.Raw(ViewBag.Game.Moves.Replace(",", "<br />"))</p>
+
+
 <form action="/game/@ViewBag.Game.ID/playmove" method="post">
     x: <input type="text" name="x" />
     y: <input type="text" name="y" />
