@@ -62,13 +62,13 @@
                         //vPool += '<li><a onclick="Invite(' + val.id + ')">' + val.name + '</a></li>';
                         $.ajax({ url: "/game/get", data: { FBID1: userFBID, FBID2: val.id }, async: true, dataType: "json", type: "post", success: function (data) { 
                             vPool += '<li>';
-                            vPool += '<h4>'+val.name+'</h4>';
-                            
-                            if(data === null)
+                            vPool += '<h4>'+val.name+'</h4>'; 
+
+                            if(data == null)
                             {
                                 vPool += '<a onclick="Invite(' + val.id + ')">Invite</a>';
                             }
-                            else if(data === userFBID)
+                            else if(data == userFBID)
                             {
                                 vPool += '<a >Play</a>';
                             }
