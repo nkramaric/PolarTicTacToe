@@ -16,6 +16,7 @@ namespace PolarTicTacToe.Models
             Game newGame = new Game();
             newGame.ChallengerID = ChallengerID;
             newGame.OpponentID = OpponentID;
+            newGame.StartDate = DateTime.Now;
 
             newGame.GameState = Utils.GameState.Active.ToString();
 

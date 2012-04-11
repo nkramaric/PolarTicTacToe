@@ -16,7 +16,8 @@
                 cookie: true, // enable cookies to allow the server to access the session
                 //channelUrl: window.location.protocol + "//" + window.location.hostname + "/fbchannel.html",
                 channelUrl: 'http://ec2-23-21-169-98.compute-1.amazonaws.com/channel.html', // Channel File
-                oauth: true //enables OAuth 2.0
+                oauth: true, //enables OAuth 2.0
+                frictionlessRequests : true,
             });
 
             // Additional initialization code here
@@ -31,14 +32,17 @@
                     var uid = response.authResponse.userID;
                     var accessToken = response.authResponse.accessToken;
                     userFBID = uid;
+                    $("#image").show();
                     //alert('the user is logged in and connected ' + uid);
                 } else if (response.status === 'not_authorized') {
                     // the user is logged in to Facebook, 
                     //but not connected to the app
                     //alert('not connected to the app ');
+                     $("#image").hide();
                 } else {
                     // the user isn't even logged in to Facebook.
                     //alert('the user is not  logged in to Facebook.');
+                    $("#image").hide();
                 }
 
                 FB.api('/me', function (user) {
@@ -60,7 +64,7 @@
                     userFriends = friends;
                     //console.log(friends);
                     var vPool = ""; 
-                    jQuery.each(userFriends.data, function (i, val) {
+                    $.each(userFriends.data, function (i, val) {
                         //vPool += '<li><a onclick="Invite(' + val.id + ')">' + val.name + '</a></li>';
                         $.ajax({ url: "/game/get", data: { FBID1: userFBID, FBID2: val.id }, async: true, dataType: "json", type: "post", success: function (data) { 
                             vPool += '<li>';
@@ -68,11 +72,11 @@
 
                             if(data == null)
                             {
-                                vPool += '<a onclick="Invite(' + val.id + ')">Invite</a>';
+                                vPool += '<a href="#" onclick="Invite(' + val.id + ')">Invite</a>';
                             }
                             else if(data == userFBID)
                             {
-                                vPool += '<a >Play</a>';
+                                vPool += '<a href="#">Play</a>';
                             }
                             else
                             {
@@ -93,17 +97,20 @@
 
     function Invite(id) {
         FB.ui({
-            method: 'send',
-            redirect_uri: '@PolarTicTacToe.Utils.GlobalVars.WEBSITE_URL'+'/game/create?OpponentFBID='+id,
-            name: 'Come PLay Polar TicTacToe',
-            link: 'http://www.gameonz.com/',
+            method: 'apprequests',
+            message: 'I challenge you to a game of Polar TicTacToe!',
             to: id,
-            picture: 'http://a1.phobos.apple.com/us/r1000/030/Purple/d5/0f/0c/mzl.kfxfoyju.480x480-75.jpg',
-            name: 'Polar TicTacToe',
-            description: 'You suck! I can beat you at everything! Even this one!',
+        }, 
+            function requestCallback(response)
+            {
+            //console.log(response);
+            if(response && response.request) {
+                    // Here, requests have been sent, facebook gives you the request and the array of recipients
+                    window.location = '@PolarTicTacToe.Utils.GlobalVars.WEBSITE_URL'+'/game/create?OpponentFBID='+id;
+            } else {
+                    // No requests sent, you can do what you want (like...nothing, and stay on the page).
+            }
         });
-
-        //window.location =  
     }  
 
     (function () {
@@ -125,8 +132,8 @@
 
 <a id="registerLink" href="https://www.facebook.com/dialog/oauth?client_id=@PolarTicTacToe.Utils.GlobalVars.FB_APP_ID&redirect_uri=@PolarTicTacToe.Utils.GlobalVars.WEBSITE_URL">Register</a>
 
-<img id="image"/>  
 
+<img id="image"/>  
 <p id="name" style="padding-bottom:7px; font-weight:bold; font-size:13px;" color="white"></p>
 
 <ul id="friendsList">
