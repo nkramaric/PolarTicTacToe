@@ -64,7 +64,7 @@
                 FB.api('/me/friends', function (friends) {
                     userFriends = friends;
                     
-                    var namesArray = $.map(friends.data, function(val, i){
+                    var friendSource = $.map(friends.data, function(val, i){
                       return {
                             label: val.name,
                             value: val.id,
@@ -72,7 +72,7 @@
                     });
 
                     $("#searchText").autocomplete({
-			            source: namesArray,
+			            source: friendSource,
                         select: function(event, ui) { 
                             console.log(event);
                             console.log(ui);
@@ -84,7 +84,7 @@
 		            }).data("autocomplete")._renderItem = function (ul, item) {
                         return $("<li></li>")
 	                    .data("item.autocomplete", item)
-	                    .append('<a><div class="ac-team-name">' + item.label + '</div><div class="ac-location-desc">' + item.value + '</div></a>')
+	                    .append('<a><div>' + item.label + '</div><div>' + item.value + '</div></a>')
 	                    .appendTo(ul);
                     }
                     

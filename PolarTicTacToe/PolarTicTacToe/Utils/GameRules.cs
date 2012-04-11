@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using PolarTicTacToe.Models;
 
 namespace PolarTicTacToe.Utils
 {
@@ -17,20 +18,71 @@ namespace PolarTicTacToe.Utils
                 return false;
             }
 
-            if (CheckHorizontal(game))
+            if (CheckHorizontal(game) || CheckVertical(game) || CheckSpiral(game))
             {
-
+                winner = game.MoveList.Last().UserID;
+                return true;
             }
+            else
+            {
+                return false;
+            }
+        }
 
-            return false;
+        private bool CheckSpiral(Game game)
+        {
+            var lastMove = game.MoveList.Last();
+            int? playerID = lastMove.UserID;
+            int y = lastMove.position.Y;
+            int x = lastMove.position.X;
+            int distanceToOuterSpiral = (3 - y);
+
+            Coordinate outerPosition1 = new Coordinate(x + distanceToOuterSpiral, 3);
+            Coordinate outerPosition2 = new Coordinate(x - distanceToOuterSpiral, 3);
+
+
+            //checking both spirals
+            return (game[outerPosition1] == playerID && game[outerPosition1 - new Coordinate(1, 1)] == playerID && game[outerPosition1 - new Coordinate(2, 2)] == playerID && game[outerPosition1 - new Coordinate(3, 3)] == playerID)
+                || (game[outerPosition2] == playerID && game[outerPosition2 + new Coordinate(1, -1)] == playerID && game[outerPosition2 - new Coordinate(2, -2)] == playerID && game[outerPosition2 - new Coordinate(3, -3)] == playerID);
+
+        }
+
+        private bool CheckVertical(Game game)
+        {
+            var lastMove = game.MoveList.Last();
+            int? playerID = lastMove.UserID;
+            int y = lastMove.position.Y;
+            int x = lastMove.position.X;
+
+            return game[x, 0] == playerID && game[x, 1] == playerID && game[x,2] == playerID && game[x, 3] == playerID;
         }
 
         private bool CheckHorizontal(Models.Game game)
         {
             var lastMove = game.MoveList.Last();
-            int player = game.MoveList.Last().UserID;
+            int? player = game.MoveList.Last().UserID;
+            int row = 0;
 
-            //if (game.Position(lastMove.position
+            for (int i = lastMove.position.X - 3; i < lastMove.position.X + 3; i++)
+            {
+                Coordinate curPosition = new Coordinate(i, lastMove.position.Y);
+
+                int? userID = game[curPosition.X, curPosition.Y];
+
+                if (userID == player)
+                {
+                    row++;
+                    if (row == 4)
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    row = 0;
+                }
+            }
+
             return false;
         }
 

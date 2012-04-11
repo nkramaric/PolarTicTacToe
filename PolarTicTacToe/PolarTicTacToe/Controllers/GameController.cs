@@ -38,7 +38,7 @@ namespace PolarTicTacToe.Controllers
 
             Tuple<int, int> spot = new Tuple<int, int>(x, y);
 
-            if (game.PendingPlayerID == CurrentUser.ID)
+            if (game.PendingPlayerID == CurrentUser.ID && game.GameState != GameState.Finished.ToString())
             {
                 bool isValid = Game.PlayMove(id, CurrentUser.ID, spot, out winner, out message);
             }
@@ -49,7 +49,16 @@ namespace PolarTicTacToe.Controllers
 
             return Json(true, JsonRequestBehavior.DenyGet);
         }
-        
+
+        [HttpGet]
+        public ActionResult GetMoves(int id)
+        {
+            Game game = Game.Get(id);
+
+            return Json(game.MoveList, JsonRequestBehavior.AllowGet);
+        }
+
+
         [HttpPost]
         public ActionResult Get(long FBID1, long FBID2)
         {

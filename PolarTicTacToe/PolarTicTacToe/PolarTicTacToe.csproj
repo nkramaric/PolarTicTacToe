@@ -83,6 +83,7 @@
     <Compile Include="Utils\GameRules.cs" />
     <Compile Include="Utils\GameState.cs" />
     <Compile Include="Utils\GlobalVars.cs" />
+    <Compile Include="Utils\Coordinate.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\bootstrap\css\bootstrap-responsive.css" />
@@ -111,6 +112,8 @@
     <Content Include="Assets\css\ui-lightness\jquery-ui-1.8.18.custom.css" />
     <Content Include="Assets\js\jquery-1.7.1.min.js" />
     <Content Include="Assets\js\jquery-ui-1.8.18.custom.min.js" />
+    <Content Include="Assets\js\game.js" />
+    <Content Include="Assets\js\raphael-min.js" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

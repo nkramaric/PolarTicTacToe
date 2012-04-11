@@ -1,12 +1,75 @@
 ﻿@{
     ViewBag.Title = "Play";
+    string fill = "#60af75";
+    
+    if (ViewBag.Game.OpponentID == ViewBag.User.ID)
+    {
+        fill = "#bb2e36";
+    }
+}
+
+@section ExtraHeaderContent {
+<script type="text/javascript" src="/Assets/js/raphael-min.js"></script>
+}
+
+@section FooterScripts {
+<script type="text/javascript" src="/assets/js/game.js"></script>
+
+
+<script type="text/javascript">
+
+
+
+
+    var game;
+    function playMove(x, y, section) {
+
+        $.post("/game/@ViewBag.Game.ID/playmove", { x: x, y: y }, function (data) {
+            if (data == true) {
+                section.attr({ fill: "@fill" });
+            }
+        });
+    }
+
+    $(document).ready(function () {
+
+        $.get("/game/@ViewBag.Game.ID/moves", function (data) {
+            console.log(data);
+            game = new DartBoard(null, playMove, data);
+        }, "json");
+
+
+        setInterval(function () {
+            $.get("/game/@ViewBag.Game.ID/moves", function (data) {
+                game.setMoves(data);
+                game.draw();
+            }, "json");
+        }, 2000);
+
+
+    });
+</script>
+
 }
 
 <h2>Play</h2>
 
 
+
+
+<p>Moves: <br /> @if (ViewBag.Game.Moves != null)
+                 {
+                      @Html.Raw(ViewBag.Game.Moves.Replace(",", "<br />"))
+                 }</p>
+
+
 <form action="/game/@ViewBag.Game.ID/playmove" method="post">
-    x: <input type="text" name="x" />
-    y: <input type="text" name="y" />
+    x: <input type="text" id="x" name="x" />
+    y: <input type="text" id="y" name="y" />
     <input type="submit" value="submit" />
 </form>
+
+
+<div id="board" style="width:500px; height:500px;"></div>
+
+
