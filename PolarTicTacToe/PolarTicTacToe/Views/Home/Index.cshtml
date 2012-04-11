@@ -70,48 +70,45 @@
                             value: val.id,
                         };
                     });
-
-                    $("#searchText").autocomplete({
-			            source: friendSource,
-                        select: function(event, ui) { 
-                            console.log(event);
-                            console.log(ui);
-                        },
-                        open: function(event, ui) { 
-                            console.log(event);
-                            console.log(ui);
-                        },
-		            }).data("autocomplete")._renderItem = function (ul, item) {
-                        return $("<li></li>")
-	                    .data("item.autocomplete", item)
-	                    .append('<a><div>' + item.label + '</div><div>' + item.value + '</div></a>')
-	                    .appendTo(ul);
-                    }
-                    
-                    ;
-
                     var vPool = ""; 
-                    $.each(friends.data, function (i, val) {
+                    $.each(friendSource, function (i, friend) {
                         //vPool += '<li><a onclick="Invite(' + val.id + ')">' + val.name + '</a></li>';
-                        $.ajax({ url: "/game/get", data: { FBID1: userFBID, FBID2: val.id }, async: true, dataType: "json", type: "post", success: function (data) { 
+                        $.ajax({ url: "/game/get", data: { FBID1: userFBID, FBID2: friend.value }, async: true, dataType: "json", type: "post", success: function (gameData) { 
+                            //console.log(gameData);
+                            
                             vPool += '<li>';
-                            vPool += '<h4>'+val.name+'</h4>'; 
-
-                            if(data == null)
+                            vPool += '<h4>'+friend.label+'</h4>'; 
+                            if(gameData.pendingPlayerFBID == null)
                             {
-                                vPool += '<a href="#" onclick="Invite(' + val.id + ')">Invite</a>';
+                                vPool += '<a href="#" onclick="Invite(' + friend.value + ')">Invite</a>';
+                                friend.gameState = "Invite";
                             }
-                            else if(data == userFBID)
+                            else if(gameData.pendingPlayerFBID == userFBID)
                             {
-                                vPool += '<a href="#">Play</a>';
+                                vPool += '<a href="/game/' + gameData.gameID + '/play/">Play</a>';
+                                friend.gameState = "Play";
                             }
                             else
                             {
                                 vPool += 'Waiting...';
+                                 friend.gameState = "Waiting...";
                             }
-                           
                             vPool += '</li>';
                             $('#friendsList').html(vPool);
+
+                            $("#searchText").autocomplete({
+			                    source: friendSource,
+                                select: function(event, ui) { 
+                                   // do something
+                                },
+		                    }).data("autocomplete")._renderItem = function (ul, item) {
+                                return $("<li></li>")
+	                            .data("item.autocomplete", item)
+	                            .append('<a><div><h4>' + item.label + '</h4></div><div>' + item.gameState + '</div></a>')
+	                            .appendTo(ul);
+                            };
+                            console.log(friendSource);
+
                         } });
                     });
                     
