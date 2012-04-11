@@ -71,6 +71,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\API\Game.cs" />
     <Compile Include="Models\Game.cs" />
     <Compile Include="Models\Move.cs" />
     <Compile Include="Models\Player.cs" />

@@ -51,6 +51,14 @@ namespace PolarTicTacToe.Controllers
         }
 
         [HttpGet]
+        public ActionResult GetGame(int id)
+        {
+            Game game = Game.Get(id);
+
+            return Json(game.GetApiGame(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
         public ActionResult GetMoves(int id)
         {
             Game game = Game.Get(id);
