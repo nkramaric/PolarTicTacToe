@@ -10,6 +10,7 @@ DartBoard = (function () {
         this.originY = Math.min(this.paper.width, this.paper.height) / 2;
         this.radius = Math.min(this.paper.width, this.paper.height) / 2 - 15;
         this.postAction = postAction;
+        this.slices = [];
         this.draw();
     }
     DartBoard.prototype.setMoves = function (moves) {
@@ -21,9 +22,11 @@ DartBoard = (function () {
         _ref = this.ScoreOrder;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             score = _ref[_i];
-            slice = new BoardSlice(score, _i, this);
-            slice.color(idx);
-            slice.rotate(idx * 45);
+            if (this.slices[_i] == null) {
+                this.slices[_i] = new BoardSlice(score, _i, this);
+            }
+            this.slices[_i].color(idx);
+            this.slices[_i].rotate(idx * 45);
             idx += 1;
         }
         return new BullsEye(this);
