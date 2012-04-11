@@ -34,6 +34,12 @@ namespace PolarTicTacToe
             );
 
             routes.MapRoute(
+                "GameMoves",
+                "game/{id}/moves",
+                 new { controller = "Game", action = "GetMoves", id = UrlParameter.Optional } // Parameter defaults
+            );
+
+            routes.MapRoute(
                "GetActiveGame",
                "game/get",
                 new { controller = "Game", action = "Get" } // Parameter defaults

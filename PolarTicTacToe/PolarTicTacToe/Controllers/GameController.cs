@@ -49,7 +49,16 @@ namespace PolarTicTacToe.Controllers
 
             return Json(true, JsonRequestBehavior.DenyGet);
         }
-        
+
+        [HttpGet]
+        public ActionResult GetMoves(int id)
+        {
+            Game game = Game.Get(id);
+
+            return Json(game.MoveList, JsonRequestBehavior.AllowGet);
+        }
+
+
         [HttpPost]
         public ActionResult Get(long FBID1, long FBID2)
         {

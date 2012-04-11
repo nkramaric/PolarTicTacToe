@@ -2,13 +2,18 @@
 var __bind = function (fn, me) { return function () { return fn.apply(me, arguments); }; };
 DartBoard = (function () {
     DartBoard.prototype.ScoreOrder = [20, 1, 18, 4, 13, 6, 10, 15];
-    function DartBoard(game) {
+    function DartBoard(game, postAction, moves) {
+        this.moves = moves;
         this.game = game;
         this.paper = Raphael('board');
         this.originX = Math.min(this.paper.width, this.paper.height) / 2;
         this.originY = Math.min(this.paper.width, this.paper.height) / 2;
         this.radius = Math.min(this.paper.width, this.paper.height) / 2 - 15;
+        this.postAction = postAction;
         this.draw();
+    }
+    DartBoard.prototype.setMoves = function (moves) {
+        this.moves = moves;
     }
     DartBoard.prototype.draw = function () {
         var idx, score, slice, _i, _len, _ref;
@@ -23,9 +28,19 @@ DartBoard = (function () {
         }
         return new BullsEye(this);
     };
-    DartBoard.prototype.emitScore = function (score) {
-        //return this.game.hit(score);
+    DartBoard.prototype.emitCoordinates = function (x, y, section) {
+        this.postAction(x, y, section);
+        console.log(section);
     };
+    DartBoard.prototype.findSectionIndex = function (x, y) {
+        for (var i = 0; i < this.moves.length; i++) {
+            if (this.moves[i].position.X == x && this.moves[i].position.Y == y) {
+                return i;
+            }
+        }
+        return null;
+    };
+
     return DartBoard;
 })();
 BullsEye = (function () {
@@ -79,8 +94,9 @@ BullsEye = (function () {
             }, 250, "bounce");
         }, this));
     };
-    BullsEye.prototype.emitHit = function (score) {
-        return this.board.emitScore(score);
+    BullsEye.prototype.emitHit = function (x, y) {
+        alert("x: " + this.x + " y: " + range[2]);
+        return this.board.emitCoordinates(x, y);
     };
     return BullsEye;
 })();
@@ -95,6 +111,7 @@ BoardSlice = (function () {
         this.board = board;
         this.x = x;
         this.slices = this.board.paper.set();
+
         _ref = this.Sections;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             section = _ref[_i];
@@ -107,18 +124,33 @@ BoardSlice = (function () {
         return this.slices.rotate(angle, this.board.originX, this.board.originY);
     };
     BoardSlice.prototype.color = function (idx) {
-        this.slices[0].attr({
-            fill: this.DoubleTripleColors[idx % 2]
-        });
-        this.slices[2].attr({
-            fill: this.SingleColors[idx % 2]
-        });
-        this.slices[4].attr({
-            fill: this.DoubleTripleColors[idx % 2]
-        });
-        return this.slices[6].attr({
-            fill: this.SingleColors[idx % 2]
-        });
+        var x = this.x;
+        var j = 0;
+        for (var i = 0; i < 4; i++) {
+            var y = this.Sections[i][2];
+            var index = this.board.findSectionIndex(x, y);
+            if (index == null) {
+                if (j % 4 == 0) {
+                    this.slices[j].attr({
+                        fill: this.DoubleTripleColors[idx % 2]
+                    });
+                } else {
+                    this.slices[j].attr({
+                        fill: this.SingleColors[idx % 2]
+                    });
+                }
+            } else if (index % 2 == 0) {
+                this.slices[j].attr({
+                    fill: "#60af75"
+                });
+            } else if (index % 2 == 1) {
+                this.slices[j].attr({
+                    fill: "#bb2e36"
+                });
+            }
+            j = j + 2;
+        }
+      
     };
     BoardSlice.prototype.drawSection = function (range) {
         var section;
@@ -128,8 +160,7 @@ BoardSlice = (function () {
             "stroke": "#999999"
         });
         section.click(__bind(function (event) {
-            alert("x: " + this.x + " y: " + range[2]);
-            return this.emitHit(this.value * range[2]);
+            return this.emitHit(this.x, range[2], section);
         }, this));
         section.mouseover(__bind(function (event) {
             return this.sectionHoverIn(section);
@@ -167,8 +198,8 @@ BoardSlice = (function () {
             scale: "1"
         }, 250, "bounce");
     };
-    BoardSlice.prototype.emitHit = function (score) {
-        return this.board.emitScore(score);
+    BoardSlice.prototype.emitHit = function (x, y, section) {
+        return this.board.emitCoordinates(x, y, section);
     };
     BoardSlice.prototype.pointsFor = function (factor) {
         var lx, ly, radius, rx, ry;
@@ -202,7 +233,3 @@ BoardSlice = (function () {
     };
     return BoardSlice;
 })();
-
-$(document).ready(function () {
-    var game = new DartBoard(null);
-});
