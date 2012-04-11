@@ -158,9 +158,8 @@
         }, 
             function requestCallback(response)
             {
-            console.log(response);
             if(response && response.request) {
-                    // Here, requests have been sent, facebook gives you the request and the array of recipients
+                    // Here, requests have been sent, facebook gives you the request and the array of recipients 
                     window.location = '@PolarTicTacToe.Utils.GlobalVars.WEBSITE_URL'+'/game/create?OpponentFBID='+id+'&appRequest='+response.request;
             } else {
                     // No requests sent, you can do what you want (like...nothing, and stay on the page).
