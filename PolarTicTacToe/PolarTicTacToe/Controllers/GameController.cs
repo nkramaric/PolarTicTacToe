@@ -68,6 +68,7 @@ namespace PolarTicTacToe.Controllers
             var player2 = Player.GetByFBID(FBID2);
 
             long? pendingPlayerFBID = null;
+            int? gameID = null;
 
             if (player1 != null && player2 != null)
             {
@@ -75,10 +76,11 @@ namespace PolarTicTacToe.Controllers
                 if (curGame != null)
                 {
                     pendingPlayerFBID = Player.GetByID(curGame.PendingPlayerID).FacebookID;
+                    gameID = curGame.ID;
                 }
             }
-            
-            return Json(pendingPlayerFBID, JsonRequestBehavior.DenyGet);
+
+            return Json(new { pendingPlayerFBID = pendingPlayerFBID, gameID = gameID }, JsonRequestBehavior.DenyGet);
         }
 
 
