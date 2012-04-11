@@ -69,32 +69,51 @@
                         };
                     });
 
-                    var vPool = ""; 
+                    var playPool = "";
+                    var waitingPool = "";
+                    var invitePool = "";
                     $.each(friendSource, function (i, friend) {
 
                         $.ajax({ url: "/game/get", data: { FBID1: userFBID, FBID2: friend.value }, async: true, dataType: "json", type: "post", success: function (gameData) { 
 
                             friend.gameID = gameData.gameID;
+                            var tempString = "";
 
-                            vPool += '<li>';
-                            vPool += '<h4>'+friend.label+'</h4>'; 
+                            tempString += '<li>';
+                            tempString += '<h4>'+friend.label+'</h4>'; 
                             if(gameData.pendingPlayerFBID == null)
                             {
-                                vPool += '<a href="#" onclick="Invite(' + friend.value + ')">Invite</a>';
+                                tempString += '<a href="#" onclick="Invite(' + friend.value + ')">Invite</a>';
                                 friend.gameState = "Invite";
                             }
                             else if(gameData.pendingPlayerFBID == userFBID)
                             {
-                                vPool += '<a href="#" onclick="LoadGame(' + gameData.gameID + ')" >Play</a>';
+                                tempString += '<a href="#" onclick="LoadGame(' + gameData.gameID + ')" >Play</a>';
                                 friend.gameState = "Play";
                             }
                             else
                             {
-                                vPool += 'Waiting...';
+                                tempString += 'Waiting...';
                                 friend.gameState = "Waiting...";
                             }
-                            vPool += '</li>';
-                            $('#friendsList').html(vPool);
+                            tempString += '</li>';
+                            
+                            if(friend.gameState == "Play")
+                            {
+                                playPool += tempString;
+                            }
+                            else if (friend.gameState == "Waiting...")
+                            {
+                                waitingPool += tempString;
+                            }
+                            else
+                            {
+                                invitePool += tempString;
+                            }
+
+                            var fullPool = playPool + waitingPool + invitePool;
+
+                            $('#friendsList').html(fullPool);
 
                             // update autocomplete
                             $("#searchText").autocomplete({
@@ -117,10 +136,8 @@
 	                            .appendTo(ul);
                             };
 
-                        } });
+                        }});
                     });
-                    
-                    vPool = "";
                 });
 
             });
