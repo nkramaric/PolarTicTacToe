@@ -55,7 +55,7 @@ BullsEye = (function () {
         var double, single;
         single = this.board.paper.circle(this.board.originX, this.board.originY, this.board.radius * 0.1);
         single.attr({
-            fill: "#60af75",
+            fill: "#f5e1c3",
             "stroke-width": 2,
             "stroke": "#999999"
         });
@@ -64,7 +64,7 @@ BullsEye = (function () {
         }, this));
         double = this.board.paper.circle(this.board.originX, this.board.originY, this.board.radius * 0.048);
         double.attr({
-            fill: "#bb2e36",
+            fill: "#F5D7AB",
             "stroke-width": 2,
             "stroke": "#999999"
         });
@@ -104,10 +104,10 @@ BullsEye = (function () {
     return BullsEye;
 })();
 BoardSlice = (function () {
-    BoardSlice.prototype.Sections = [[0.96, 0.75, 3], [0.75, 0.54, 2], [0.54, 0.33, 1], [0.33, 0.10, 0]];
-    BoardSlice.prototype.SingleColors = ['#f5e1c3', '#040204'];
+    BoardSlice.prototype.Sections = [[0.98, 0.86, -1], [0.96, 0.75, 3], [0.75, 0.54, 2], [0.54, 0.33, 1], [0.33, 0.10, 0]];
+    BoardSlice.prototype.SingleColors = ['#f5e1c3', '#F5D7AB'];
     //BoardSlice.prototype.DoubleTripleColors = ['#60af75', '#bb2e36'];
-    BoardSlice.prototype.DoubleTripleColors = ['#040204', '#f5e1c3'];
+    BoardSlice.prototype.DoubleTripleColors = ['#F5D7AB', '#f5e1c3'];
     function BoardSlice(value, x, board) {
         var section, _i, _len, _ref;
         this.value = value;
@@ -129,7 +129,7 @@ BoardSlice = (function () {
     BoardSlice.prototype.color = function (idx) {
         var x = this.x;
         var j = 0;
-        for (var i = 0; i < 4; i++) {
+        for (var i = 0; i < 5; i++) {
             var y = this.Sections[i][2];
             var index = this.board.findSectionIndex(x, y);
             if (index == null) {
@@ -153,24 +153,26 @@ BoardSlice = (function () {
             }
             j = j + 2;
         }
-      
+
     };
     BoardSlice.prototype.drawSection = function (range) {
         var section;
         section = this.shapePath(range[0], range[1]);
-        section.attr({
-            "stroke-width": 2,
-            "stroke": "#999999"
-        });
-        section.click(__bind(function (event) {
-            return this.emitHit(this.x, range[2], section);
-        }, this));
-        section.mouseover(__bind(function (event) {
-            return this.sectionHoverIn(section);
-        }, this));
-        section.mouseout(__bind(function (event) {
-            return this.sectionHoverOut(section);
-        }, this));
+        if (range[2] != -1) {
+            section.attr({
+                "stroke-width": 2,
+                "stroke": "#999999"
+            });
+            section.click(__bind(function (event) {
+                return this.emitHit(this.x, range[2], section);
+            }, this));
+            section.mouseover(__bind(function (event) {
+                return this.sectionHoverIn(section);
+            }, this));
+            section.mouseout(__bind(function (event) {
+                return this.sectionHoverOut(section);
+            }, this));
+        }
         return section;
     };
     BoardSlice.prototype.drawNumber = function () {

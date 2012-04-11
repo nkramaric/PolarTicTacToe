@@ -160,5 +160,18 @@ namespace PolarTicTacToe.Models
                 return GetPosition(coordinate.X, coordinate.Y).UserID;
             }
         }
+
+        public API.Game GetApiGame()
+        {
+            API.Game newGame = new API.Game();
+
+            newGame.ChallengerID = ChallengerID;
+            newGame.OpponentID = OpponentID;
+            newGame.Moves = Moves;
+            newGame.WinnerID = WinnerID;
+            newGame.GameState = GameState;
+
+            return newGame;
+        }
     }
 }

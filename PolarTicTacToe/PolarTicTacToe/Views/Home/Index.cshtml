@@ -1,5 +1,34 @@
 ﻿@{
     ViewBag.Title = "Home Page";
+    ViewBag.Title = "Play";
+}
+
+@section ExtraHeaderContent {
+<script type="text/javascript" src="/Assets/js/raphael-min.js"></script>
+}
+
+@section FooterScripts {
+    <script type="text/javascript" src="/assets/js/game.js"></script>
+
+    <script type="text/javascript">
+        var game;
+        var fill;
+        function playMove(x, y, section) {
+
+            $.post("/game/" + gameId + "/playmove", { x: x, y: y }, function (data) {
+                if (data.isValid == true) {
+                    section.attr({ fill: fill });
+                }
+                if (data.winner != null){
+                    if (data.winner == @ViewBag.User.ID){
+                        $('#winner').html("You are the winner!");
+                    }else{
+                        $('#winner').html("You lose!");
+                    }
+                }
+            });
+        }
+    </script>
 }
 
 <div id="fb-root"></div>
@@ -156,8 +185,10 @@
             message: 'I challenge you to a game of Polar TicTacToe!',
             to: id,
         }, 
-            function requestCallback(response)
-            {
+
+        function requestCallback(response)
+        {
+            //console.log(response);
             if(response && response.request) {
                     // Here, requests have been sent, facebook gives you the request and the array of recipients 
                     window.location = '@PolarTicTacToe.Utils.GlobalVars.WEBSITE_URL'+'/game/create?OpponentFBID='+id+'&appRequest='+response.request;
@@ -167,8 +198,38 @@
         });
     }  
 
+    var gameId;
+
     function LoadGame(id) {
-        window.location = '/game/' + id + '/play/';
+        gameId = id;
+
+        $.get("/game/" + gameId, function(data){
+
+            fill = "#60af75";
+
+            if (data.OpponentID == @ViewBag.User.ID)
+                fill = "#bb2e36";
+            
+            $('#board').children().remove();
+
+            $.get("/game/" + gameId + "/moves", function (data) {
+                game = new DartBoard(null, playMove, data);
+            }, "json");
+
+            setInterval(function () {
+                $.get("/game/" + gameId + "/moves", function (data) {
+                    game.setMoves(data.moves);
+                    game.draw();
+                    if (data.winner != null){
+                        if (data.winner == @ViewBag.User.ID){
+                            $('#winner').html("You are the winner!");
+                        }else{
+                            $('#winner').html("You lose!");
+                        }
+                    }
+                }, "json");
+            }, 2000);
+        });
     }  
 
     (function () {
@@ -198,3 +259,7 @@ Search: <input id="searchText" type="text" />
 
 <ul id="friendsList">
 </ul>   
+
+<h2 id="winner"></h2>
+
+<div id="board" style="width:500px; height:500px;"></div>
