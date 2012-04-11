@@ -60,7 +60,6 @@ namespace PolarTicTacToe.Models
                 game.Moves = game.Moves ?? "";
                 game.Moves += move;
                 
-
                 if (gameRules.IsFinished(game, out winner))
                 {
                     winner = player;

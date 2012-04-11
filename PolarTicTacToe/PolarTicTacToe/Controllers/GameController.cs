@@ -37,17 +37,17 @@ namespace PolarTicTacToe.Controllers
             Game game = Game.Get(id);
 
             Tuple<int, int> spot = new Tuple<int, int>(x, y);
+            bool isValid = false;
 
             if (game.PendingPlayerID == CurrentUser.ID && game.GameState != GameState.Finished.ToString())
             {
-                bool isValid = Game.PlayMove(id, CurrentUser.ID, spot, out winner, out message);
+                isValid = Game.PlayMove(id, CurrentUser.ID, spot, out winner, out message);
             }
-            else
-            {
-                return Json(false, JsonRequestBehavior.DenyGet);
-            }
+            
+            //refresh
+            game = Game.Get(id);
 
-            return Json(true, JsonRequestBehavior.DenyGet);
+            return Json(new { isValid = isValid, winner = game.WinnerID }, JsonRequestBehavior.DenyGet);
         }
 
         [HttpGet]
@@ -55,7 +55,9 @@ namespace PolarTicTacToe.Controllers
         {
             Game game = Game.Get(id);
 
-            return Json(game.MoveList, JsonRequestBehavior.AllowGet);
+            int? winner = game.WinnerID;
+
+            return Json(new { moves = game.MoveList, winner = winner }, JsonRequestBehavior.AllowGet);
         }
 
 

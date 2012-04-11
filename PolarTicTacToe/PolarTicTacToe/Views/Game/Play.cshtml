@@ -18,15 +18,19 @@
 
 <script type="text/javascript">
 
-
-
-
     var game;
     function playMove(x, y, section) {
 
         $.post("/game/@ViewBag.Game.ID/playmove", { x: x, y: y }, function (data) {
-            if (data == true) {
+            if (data.isValid == true) {
                 section.attr({ fill: "@fill" });
+            }
+            if (data.winner != null){
+                if (data.winner == @ViewBag.User.ID){
+                    $('#winner').html("You are the winner!");
+                }else{
+                    $('#winner').html("You lose!");
+                }
             }
         });
     }
@@ -34,15 +38,21 @@
     $(document).ready(function () {
 
         $.get("/game/@ViewBag.Game.ID/moves", function (data) {
-            console.log(data);
             game = new DartBoard(null, playMove, data);
         }, "json");
 
 
         setInterval(function () {
             $.get("/game/@ViewBag.Game.ID/moves", function (data) {
-                game.setMoves(data);
+                game.setMoves(data.moves);
                 game.draw();
+                if (data.winner != null){
+                    if (data.winner == @ViewBag.User.ID){
+                        $('#winner').html("You are the winner!");
+                    }else{
+                        $('#winner').html("You lose!");
+                    }
+                }
             }, "json");
         }, 2000);
 
@@ -55,7 +65,7 @@
 <h2>Play</h2>
 
 
-
+<h2 id="winner"></h2>
 
 <p>Moves: <br /> @if (ViewBag.Game.Moves != null)
                  {

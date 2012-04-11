@@ -40,10 +40,12 @@ namespace PolarTicTacToe.Utils
             Coordinate outerPosition1 = new Coordinate(x + distanceToOuterSpiral, 3);
             Coordinate outerPosition2 = new Coordinate(x - distanceToOuterSpiral, 3);
 
+            var outer1 = (game[outerPosition1] == playerID && game[outerPosition1 - new Coordinate(1, 1)] == playerID && game[outerPosition1 - new Coordinate(2, 2)] == playerID && game[outerPosition1 - new Coordinate(3, 3)] == playerID);
+            var outer2 = (game[outerPosition2] == playerID && game[outerPosition2 + new Coordinate(1, -1)] == playerID && game[outerPosition2 + new Coordinate(2, -2)] == playerID && game[outerPosition2 + new Coordinate(3, -3)] == playerID);
 
             //checking both spirals
-            return (game[outerPosition1] == playerID && game[outerPosition1 - new Coordinate(1, 1)] == playerID && game[outerPosition1 - new Coordinate(2, 2)] == playerID && game[outerPosition1 - new Coordinate(3, 3)] == playerID)
-                || (game[outerPosition2] == playerID && game[outerPosition2 + new Coordinate(1, -1)] == playerID && game[outerPosition2 - new Coordinate(2, -2)] == playerID && game[outerPosition2 - new Coordinate(3, -3)] == playerID);
+            return outer1
+                || outer2;
 
         }
 
@@ -63,7 +65,7 @@ namespace PolarTicTacToe.Utils
             int? player = game.MoveList.Last().UserID;
             int row = 0;
 
-            for (int i = lastMove.position.X - 3; i < lastMove.position.X + 3; i++)
+            for (int i = lastMove.position.X - 4; i < lastMove.position.X + 4; i++)
             {
                 Coordinate curPosition = new Coordinate(i, lastMove.position.Y);
 
