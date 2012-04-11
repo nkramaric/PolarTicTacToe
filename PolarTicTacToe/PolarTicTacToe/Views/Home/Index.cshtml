@@ -5,7 +5,6 @@
 <div id="fb-root"></div>
 <script>
     var fbAppID = 342700949110604;
-    var userFriends;
     var userFBID;
 
     $(document).ready(function () {
@@ -61,8 +60,7 @@
                     }
                 });
 
-                FB.api('/me/friends', function (friends) {
-                    userFriends = friends;
+                FB.api('/me/friends', function (friends) { 
                     
                     var friendSource = $.map(friends.data, function(val, i){
                       return {
@@ -70,12 +68,14 @@
                             value: val.id,
                         };
                     });
+
                     var vPool = ""; 
                     $.each(friendSource, function (i, friend) {
-                        //vPool += '<li><a onclick="Invite(' + val.id + ')">' + val.name + '</a></li>';
+
                         $.ajax({ url: "/game/get", data: { FBID1: userFBID, FBID2: friend.value }, async: true, dataType: "json", type: "post", success: function (gameData) { 
-                            //console.log(gameData);
-                            
+
+                            friend.gameID = gameData.gameID;
+
                             vPool += '<li>';
                             vPool += '<h4>'+friend.label+'</h4>'; 
                             if(gameData.pendingPlayerFBID == null)
@@ -85,21 +85,30 @@
                             }
                             else if(gameData.pendingPlayerFBID == userFBID)
                             {
-                                vPool += '<a href="/game/' + gameData.gameID + '/play/">Play</a>';
+                                vPool += '<a href="#" onclick="LoadGame(' + gameData.gameID + ')" >Play</a>';
                                 friend.gameState = "Play";
                             }
                             else
                             {
                                 vPool += 'Waiting...';
-                                 friend.gameState = "Waiting...";
+                                friend.gameState = "Waiting...";
                             }
                             vPool += '</li>';
                             $('#friendsList').html(vPool);
 
+                            // update autocomplete
                             $("#searchText").autocomplete({
 			                    source: friendSource,
-                                select: function(event, ui) { 
-                                   // do something
+                                select: function(event, item) {
+                                    if(item.item.gameState == "Invite")
+                                    {
+                                        Invite(item.item.value);
+                                    }
+                                    else 
+                                    {
+                                       LoadGame(item.item.gameID);
+                                    }
+                                    return false;
                                 },
 		                    }).data("autocomplete")._renderItem = function (ul, item) {
                                 return $("<li></li>")
@@ -107,7 +116,6 @@
 	                            .append('<a><div><h4>' + item.label + '</h4></div><div>' + item.gameState + '</div></a>')
 	                            .appendTo(ul);
                             };
-                            console.log(friendSource);
 
                         } });
                     });
@@ -135,6 +143,10 @@
                     // No requests sent, you can do what you want (like...nothing, and stay on the page).
             }
         });
+    }  
+
+    function LoadGame(id) {
+        window.location = '/game/' + id + '/play/';
     }  
 
     (function () {
