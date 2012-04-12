@@ -10,49 +10,18 @@
 
 @section FooterScripts {
     <script type="text/javascript" src="/assets/js/game.js"></script>
-<<<<<<< HEAD
-
-    <script type="text/javascript">
-        var game;
-        var fill;
-        var curAppRequest;
-        function playMove(x, y, section) {
-                //console.log(curAppRequest + '_' + userFBID);
-                DeleteRequest(curAppRequest + '_' + userFBID);
-                if(isMyTurn)
-                {
-                    $.post("/game/" + gameId + "/playmove", { x: x, y: y }, function (data) {
-                        if (data.isValid == true) {
-                            section.attr({ fill: fill });
-                        }
-                        if (data.winner != null){
-                            if (data.winner == @ViewBag.User.ID){
-                                $('#winner').html("You are the winner!");
-                            }else{
-                                $('#winner').html("You lose!");
-                            }
-                        }
-                    });
-                }
-        }
-    </script>
-=======
->>>>>>> c249e275406e502f2171915fd77ac4088e8c7c73
 }
 
 <div id="fb-root"></div>
 <script>
     var fbAppID = 342700949110604;
     var userFBID;
-<<<<<<< HEAD
     var isMyTurn = false;
-=======
     var gameId;
     var userId = @UserID;
     var game;
     var fill;
     var friendGameStatus;
->>>>>>> c249e275406e502f2171915fd77ac4088e8c7c73
 
     $(document).ready(function () {
 
@@ -63,7 +32,6 @@
             if(game != null && gameId!= null)
             {
                 $.get("/game/" + gameId + "/moves", function (data) {
-<<<<<<< HEAD
                 
                 curAppRequest = data.curAppRequest;
                 //console.log(data);
@@ -81,10 +49,6 @@
 
                 game.setMoves(data.moves);
                 game.draw();
-=======
-                    game.setMoves(data.moves);
-                    game.draw();
->>>>>>> c249e275406e502f2171915fd77ac4088e8c7c73
                     if (data.winner != null){
                         if (data.winner == userId){
                             $('#winner').html("You are the winner!");
@@ -308,11 +272,6 @@
                     $('#turnDialog').html("Waiting for other player");
                 }
             }, "json");
-<<<<<<< HEAD
-           
-=======
-
->>>>>>> c249e275406e502f2171915fd77ac4088e8c7c73
         });
     }  
 
@@ -345,10 +304,7 @@ Search: <input id="searchText" type="text" />
 
 <h2 id="winner"></h2>
 
-<<<<<<< HEAD
 <h3 id="turnDialog"></h3>
 
 <div id="board" style="width:500px; height:500px;"></div>
-=======
-<div id="board" style="width:500px; height:500px;"></div>
->>>>>>> c249e275406e502f2171915fd77ac4088e8c7c73
+
