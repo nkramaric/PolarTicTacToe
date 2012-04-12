@@ -170,6 +170,7 @@ namespace PolarTicTacToe.Models
             newGame.Moves = Moves;
             newGame.WinnerID = WinnerID;
             newGame.GameState = GameState;
+            newGame.curAppRequest = CurAppRequest;
 
             return newGame;
         }

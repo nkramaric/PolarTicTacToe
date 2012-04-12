@@ -12,5 +12,6 @@ namespace PolarTicTacToe.Models.API
         public string Moves;
         public int? WinnerID;
         public string GameState;
+        public long? curAppRequest;
     }
 }
