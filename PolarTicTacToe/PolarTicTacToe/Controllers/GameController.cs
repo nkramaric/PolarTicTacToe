@@ -91,6 +91,24 @@ namespace PolarTicTacToe.Controllers
             return Json(new { pendingPlayerFBID = pendingPlayerFBID, gameID = gameID }, JsonRequestBehavior.DenyGet);
         }
 
+        [HttpGet]
+        public ActionResult GetGames(long[] fbids)
+        {
+            List<Models.API.Game> Games = new List<Models.API.Game>();
+
+            foreach (var fbid in fbids)
+            {
+                var player2 = Player.GetByFBID(fbid);
+                Game curGame = Game.GetActive(CurrentUser.ID, player2.ID);
+                if (curGame != null)
+                {
+                    Games.Add(curGame.GetApiGame());
+                }
+            }
+
+            return Json(Games, JsonRequestBehavior.AllowGet);
+        }
+
 
         [HttpGet]
         public ActionResult Create(long OpponentFBID, long appRequest)

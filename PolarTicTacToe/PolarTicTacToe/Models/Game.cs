@@ -53,7 +53,6 @@ namespace PolarTicTacToe.Models
 
             return (from p in dataContext.Games where p.GameState == Utils.GameState.Active.ToString() && (p.OpponentID == ID1 && p.ChallengerID == ID2) || (p.ChallengerID == ID1 && p.OpponentID == ID2) select p).FirstOrDefault();
         }
-
         internal static bool PlayMove(int id, int player, Tuple<int, int> spot, out int? winner, out string message)
         {
             PolarTicTacToeDataContext dataContext = new PolarTicTacToeDataContext();
@@ -171,6 +170,8 @@ namespace PolarTicTacToe.Models
             newGame.WinnerID = WinnerID;
             newGame.GameState = GameState;
             newGame.curAppRequest = CurAppRequest;
+            newGame.PendingPlayerID = PendingPlayerID;
+            newGame.ID = ID;
 
             return newGame;
         }

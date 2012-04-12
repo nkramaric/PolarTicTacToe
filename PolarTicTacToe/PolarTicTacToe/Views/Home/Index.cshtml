@@ -102,86 +102,99 @@
         };
     });
 
+    $.template("Contact", '<li> ' 
+    + '<h4>${name}</h4>'
+    + '<a href="#" onclick="${function}">${status}</a>' 
+    + '</li> ');
+
     function UpdateFriendsList()
     {
         FB.api('/me/friends', function (friends) { 
-        
-            var friendSource = $.map(friends.data, function(val, i){
-                return {
-                    label: val.name,
-                    value: val.id,
-                };
-            });
 
+            var fbids = [];
             var playPool = "";
             var waitingPool = "";
             var invitePool = ""; 
-            $.each(friendSource, function (i, friend) {
 
-                $.ajax({ url: "/game/get", data: { FBID1: userFBID, FBID2: friend.value }, async: true, dataType: "json", type: "post", success: function (gameData) { 
-                   
-                        friend.gameID = gameData.gameID;
-                        var tempString = "";
+            for (var i = 0; i < friends.data.length; i++){
+                fbids.push(friends.data[i].id);
+            }
 
-                        tempString += '<li>';
-                        tempString += '<h4>'+friend.label+'</h4>'; 
-                        if(gameData.pendingPlayerFBID == null)
-                        {
-                            tempString += '<a href="#" onclick="Invite(' + friend.value + ')">Invite</a>';
-                            friend.gameState = "Invite";
-                        }
-                        else if(gameData.pendingPlayerFBID == userFBID)
-                        {
-                            tempString += '<a href="#" onclick="LoadGame(' + gameData.gameID + ')" >Play</a>';
-                            friend.gameState = "Play";
-                        }
-                        else
-                        {
-                            tempString += 'Waiting...';
-                            friend.gameState = "Waiting...";
-                        }
-                        tempString += '</li>';
-                            
-                        if(friend.gameState == "Play")
-                        {
-                            playPool += tempString;
-                        }
-                        else if (friend.gameState == "Waiting...")
-                        {
-                            waitingPool += tempString;
-                        }
-                        else
-                        {
-                            invitePool += tempString;
-                        }
+            params = $.param({ "fbids" : fbids }, true);
 
-                        var newPool = playPool + waitingPool + invitePool;
+            $.get("/games?" + params, null, function(data){
+                
+                console.log(data);
+            }, "json");
 
-                        $('#friendsList').html(newPool);
 
-                        // update autocomplete
-                        $("#searchText").autocomplete({
-			                source: friendSource,
-                            select: function(event, item) {
-                                if(item.item.gameState == "Invite")
-                                {
-                                    Invite(item.item.value);
-                                }
-                                else 
-                                {
-                                    LoadGame(item.item.gameID);
-                                }
-                                return false;
-                            },
-		                }).data("autocomplete")._renderItem = function (ul, item) {
-                            return $("<li></li>")
-	                        .data("item.autocomplete", item)
-	                        .append('<a><div><h4>' + item.label + '</h4></div><div>' + item.gameState + '</div></a>')
-	                        .appendTo(ul);
-                        };
 
-                }});
-            });
+//            $.each(friendSource, function (i, friend) {
+
+//                $.ajax({ url: "/game/get", data: { FBID1: userFBID, FBID2: friend.value }, async: true, dataType: "json", type: "post", success: function (gameData) { 
+//                   
+//                        friend.gameID = gameData.gameID;
+//                        var tempString = "";
+
+//                        tempString += '<li>';
+//                        tempString += '<h4>'+friend.label+'</h4>'; 
+//                        if(gameData.pendingPlayerFBID == null)
+//                        {
+//                            tempString += '<a href="#" onclick="Invite(' + friend.value + ')">Invite</a>';
+//                            friend.gameState = "Invite";
+//                        }
+//                        else if(gameData.pendingPlayerFBID == userFBID)
+//                        {
+//                            tempString += '<a href="#" onclick="LoadGame(' + gameData.gameID + ')" >Play</a>';
+//                            friend.gameState = "Play";
+//                        }
+//                        else
+//                        {
+//                            tempString += 'Waiting...';
+//                            friend.gameState = "Waiting...";
+//                        }
+//                        tempString += '</li>';
+//                            
+//                        if(friend.gameState == "Play")
+//                        {
+//                            playPool += tempString;
+//                        }
+//                        else if (friend.gameState == "Waiting...")
+//                        {
+//                            waitingPool += tempString;
+//                        }
+//                        else
+//                        {
+//                            invitePool += tempString;
+//                        }
+
+//                        var newPool = playPool + waitingPool + invitePool;
+
+//                        $('#friendsList').html(newPool);
+
+//                        // update autocomplete
+//                        $("#searchText").autocomplete({
+//			                source: friendSource,
+//                            select: function(event, item) {
+//                                if(item.item.gameState == "Invite")
+//                                {
+//                                    Invite(item.item.value);
+//                                }
+//                                else 
+//                                {
+//                                    LoadGame(item.item.gameID);
+//                                }
+//                                return false;
+//                            },
+//		                }).data("autocomplete")._renderItem = function (ul, item) {
+//                            return $("<li></li>")
+//	                        .data("item.autocomplete", item)
+//	                        .append('<a><div><h4>' + item.label + '</h4></div><div>' + item.gameState + '</div></a>')
+//	                        .appendTo(ul);
+//                        };
+
+//                }});
+//            });
         });
     }
 
