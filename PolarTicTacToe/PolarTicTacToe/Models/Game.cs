@@ -171,6 +171,7 @@ namespace PolarTicTacToe.Models
             newGame.WinnerID = WinnerID;
             newGame.GameState = GameState;
             newGame.curAppRequest = CurAppRequest;
+            newGame.PendingPlayerID = this.PendingPlayerID;
 
             return newGame;
         }

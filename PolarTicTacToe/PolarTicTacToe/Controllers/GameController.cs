@@ -65,7 +65,11 @@ namespace PolarTicTacToe.Controllers
 
             int? winner = game.WinnerID;
 
-            return Json(new { moves = game.MoveList, winner = winner }, JsonRequestBehavior.AllowGet);
+            int PendingPlayerID = game.PendingPlayerID;
+
+            long? curAppRequest = game.CurAppRequest;
+
+            return Json(new { moves = game.MoveList, winner = winner, PendingPlayerID = PendingPlayerID, curAppRequest = curAppRequest }, JsonRequestBehavior.AllowGet);
         }
 
 

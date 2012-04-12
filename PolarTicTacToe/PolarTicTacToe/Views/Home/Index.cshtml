@@ -15,21 +15,23 @@
         var fill;
         var curAppRequest;
         function playMove(x, y, section) {
-            //console.log(curAppRequest + '_' + userFBID);
-            DeleteRequest(curAppRequest + '_' + userFBID);
-
-            $.post("/game/" + gameId + "/playmove", { x: x, y: y }, function (data) {
-                if (data.isValid == true) {
-                    section.attr({ fill: fill });
+                //console.log(curAppRequest + '_' + userFBID);
+                DeleteRequest(curAppRequest + '_' + userFBID);
+                if(isMyTurn)
+                {
+                    $.post("/game/" + gameId + "/playmove", { x: x, y: y }, function (data) {
+                        if (data.isValid == true) {
+                            section.attr({ fill: fill });
+                        }
+                        if (data.winner != null){
+                            if (data.winner == @ViewBag.User.ID){
+                                $('#winner').html("You are the winner!");
+                            }else{
+                                $('#winner').html("You lose!");
+                            }
+                        }
+                    });
                 }
-                if (data.winner != null){
-                    if (data.winner == @ViewBag.User.ID){
-                        $('#winner').html("You are the winner!");
-                    }else{
-                        $('#winner').html("You lose!");
-                    }
-                }
-            });
         }
     </script>
 }
@@ -38,7 +40,7 @@
 <script>
     var fbAppID = 342700949110604;
     var userFBID;
-    var friendGameStatus;
+    var isMyTurn = false;
 
     $(document).ready(function () {
 
@@ -49,6 +51,21 @@
             if(game != null && gameId!= null)
             {
                 $.get("/game/" + gameId + "/moves", function (data) {
+                
+                curAppRequest = data.curAppRequest;
+                //console.log(data);
+                game.PendingPlayerID = data.PendingPlayerID;
+                if (game.PendingPlayerID == @ViewBag.User.ID)
+                {    
+                    isMyTurn = true;
+                    $('#turnDialog').html("It's your turn.");
+                }
+                else
+                {
+                    isMyTurn = false;
+                    $('#turnDialog').html("Waiting for other player");
+                }
+
                 game.setMoves(data.moves);
                 game.draw();
                     if (data.winner != null){
@@ -155,7 +172,7 @@
                         }
                         else
                         {
-                            tempString += 'Waiting...';
+                            tempString += '<a href="#" onclick="LoadGame(' + gameData.gameID + ')" >Waiting...</a>';
                             friend.gameState = "Waiting...";
                         }
                         tempString += '</li>';
@@ -233,8 +250,10 @@
     function LoadGame(id) {
         gameId = id;
 
-        $.get("/game/" + gameId, function(data){
+        $.get("/game/" + gameId, function(data){ 
+            
             curAppRequest = data.curAppRequest;
+
             fill = "#60af75";
 
             if (data.OpponentID == @ViewBag.User.ID)
@@ -244,28 +263,25 @@
 
             $.get("/game/" + gameId + "/moves", function (data) {
                 game = new DartBoard(null, playMove, data);
+                game.PendingPlayerID = data.PendingPlayerID;
+                if (game.PendingPlayerID == @ViewBag.User.ID)
+                {
+                    isMyTurn = true;
+                    $('#turnDialog').html("It's your turn.");
+                }
+                else
+                {
+                    isMyTurn = false;
+                    $('#turnDialog').html("Waiting for other player");
+                }
             }, "json");
-
-//            setInterval(function () {
-//                $.get("/game/" + gameId + "/moves", function (data) {
-//                    game.setMoves(data.moves);
-//                    game.draw();
-//                    if (data.winner != null){
-//                        if (data.winner == @ViewBag.User.ID){
-//                            $('#winner').html("You are the winner!");
-//                        }else{
-//                            $('#winner').html("You lose!");
-//                        }
-//                    }
-//                }, "json");
-//            }, 1000);
+           
         });
     }  
 
     (function () {
         var e = document.createElement('script');
         e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js#xfbml=1';
-        //e.src = document.location.protocol + '//cbeta.grosocial.com/assets/js/facebook/en_US_all_3.js#xfbml=1'; // Load a cached version for now
         e.async = true;
         document.getElementById('fb-root').appendChild(e);
     } ());
@@ -291,5 +307,7 @@ Search: <input id="searchText" type="text" />
 </ul>   
 
 <h2 id="winner"></h2>
+
+<h3 id="turnDialog"></h3>
 
 <div id="board" style="width:500px; height:500px;"></div>
