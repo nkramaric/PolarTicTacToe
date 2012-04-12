@@ -174,18 +174,25 @@
         };
     });
 
+    function deleteRequest(requestId) {
+      FB.api(requestId, 'delete', function(response) {
+        console.log(response);
+      });
+    }
+
     function Invite(id) {
         FB.ui({
             method: 'apprequests',
             message: 'I challenge you to a game of Polar TicTacToe!',
             to: id,
         }, 
+
         function requestCallback(response)
         {
             //console.log(response);
             if(response && response.request) {
-                    // Here, requests have been sent, facebook gives you the request and the array of recipients
-                    window.location = '@PolarTicTacToe.Utils.GlobalVars.WEBSITE_URL'+'/game/create?OpponentFBID='+id;
+                    // Here, requests have been sent, facebook gives you the request and the array of recipients 
+                    window.location = '@PolarTicTacToe.Utils.GlobalVars.WEBSITE_URL'+'/game/create?OpponentFBID='+id+'&appRequest='+response.request;
             } else {
                     // No requests sent, you can do what you want (like...nothing, and stay on the page).
             }

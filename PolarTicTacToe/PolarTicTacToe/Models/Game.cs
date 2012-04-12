@@ -27,6 +27,19 @@ namespace PolarTicTacToe.Models
             return newGame;
         }
 
+        public void setAppRequest(long appRequest)
+        {
+            PolarTicTacToeDataContext dataContext = new PolarTicTacToeDataContext();
+
+            var curGame = (from p in dataContext.Games
+                           where p.ID == this.ID
+                           select p).FirstOrDefault();
+
+            curGame.CurAppRequest = appRequest;
+
+            dataContext.SubmitChanges();
+        }
+
         internal static Game Get(int id)
         {
             PolarTicTacToeDataContext dataContext = new PolarTicTacToeDataContext();

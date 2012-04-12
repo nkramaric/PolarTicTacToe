@@ -1,16 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="650606_apidocumentations" Class="PolarTicTacToeDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Connection Mode="WebSettings" ConnectionString="Data Source=50.57.219.8,4120;Initial Catalog=650606_apidocumentations;Persist Security Info=True;User ID=650606_apidocumentations" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="_650606_apidocumentationsConnectionString1" Provider="System.Data.SqlClient" />
-  <Table Name="dbo.Players" Member="Players">
-    <Type Name="Player">
-      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="FacebookID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="FirstName" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="LastName" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Association Name="Player_Game" Member="Games" ThisKey="ID" OtherKey="ChallengerID" Type="Game" />
-      <Association Name="Player_Game1" Member="Games1" ThisKey="ID" OtherKey="OpponentID" Type="Game" />
-      <Association Name="Player_Game2" Member="Games2" ThisKey="ID" OtherKey="WinnerID" Type="Game" />
-    </Type>
-  </Table>
   <Table Name="dbo.Game" Member="Games">
     <Type Name="Game">
       <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -20,9 +9,21 @@
       <Column Name="WinnerID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="GameState" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="StartDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="CurAppRequest" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
       <Association Name="Player_Game" Member="Player" ThisKey="ChallengerID" OtherKey="ID" Type="Player" IsForeignKey="true" />
       <Association Name="Player_Game1" Member="Player1" ThisKey="OpponentID" OtherKey="ID" Type="Player" IsForeignKey="true" />
       <Association Name="Player_Game2" Member="Player2" ThisKey="WinnerID" OtherKey="ID" Type="Player" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Players" Member="Players">
+    <Type Name="Player">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="FacebookID" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="FirstName" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="LastName" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Association Name="Player_Game" Member="Games" ThisKey="ID" OtherKey="ChallengerID" Type="Game" />
+      <Association Name="Player_Game1" Member="Games1" ThisKey="ID" OtherKey="OpponentID" Type="Game" />
+      <Association Name="Player_Game2" Member="Games2" ThisKey="ID" OtherKey="WinnerID" Type="Game" />
     </Type>
   </Table>
 </Database>

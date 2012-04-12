@@ -93,7 +93,7 @@ namespace PolarTicTacToe.Controllers
 
 
         [HttpGet]
-        public ActionResult Create(long OpponentFBID)
+        public ActionResult Create(long OpponentFBID, long appRequest)
         {
             // if the opponent doesnt exist create it
             var Opponent = Player.GetByFBID(OpponentFBID);
@@ -104,6 +104,8 @@ namespace PolarTicTacToe.Controllers
             var curGame = Game.GetActive(CurrentUser.ID, Opponent.ID);
             if (curGame == null)
                 curGame = Game.Create(CurrentUser.ID, Opponent.ID);
+
+            curGame.setAppRequest(appRequest);
 
             return RedirectToAction("Play", "Game", new { id = curGame.ID });
         }
