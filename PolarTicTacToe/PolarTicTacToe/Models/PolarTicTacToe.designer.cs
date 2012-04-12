@@ -316,7 +316,7 @@ namespace PolarTicTacToe.Models
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Player_Game", Storage="_Player", ThisKey="ChallengerID", OtherKey="ID", IsForeignKey=true)]
-		public Player Player
+		public Player Challenger
 		{
 			get
 			{
@@ -344,13 +344,13 @@ namespace PolarTicTacToe.Models
 					{
 						this._ChallengerID = default(int);
 					}
-					this.SendPropertyChanged("Player");
+					this.SendPropertyChanged("Challenger");
 				}
 			}
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Player_Game1", Storage="_Player1", ThisKey="OpponentID", OtherKey="ID", IsForeignKey=true)]
-		public Player Player1
+		public Player Opponent
 		{
 			get
 			{
@@ -378,13 +378,13 @@ namespace PolarTicTacToe.Models
 					{
 						this._OpponentID = default(Nullable<int>);
 					}
-					this.SendPropertyChanged("Player1");
+					this.SendPropertyChanged("Opponent");
 				}
 			}
 		}
 		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Player_Game2", Storage="_Player2", ThisKey="WinnerID", OtherKey="ID", IsForeignKey=true)]
-		public Player Player2
+		public Player Winner
 		{
 			get
 			{
@@ -412,7 +412,7 @@ namespace PolarTicTacToe.Models
 					{
 						this._WinnerID = default(Nullable<int>);
 					}
-					this.SendPropertyChanged("Player2");
+					this.SendPropertyChanged("Winner");
 				}
 			}
 		}
@@ -622,37 +622,37 @@ namespace PolarTicTacToe.Models
 		private void attach_Games(Game entity)
 		{
 			this.SendPropertyChanging();
-			entity.Player = this;
+			entity.Challenger = this;
 		}
 		
 		private void detach_Games(Game entity)
 		{
 			this.SendPropertyChanging();
-			entity.Player = null;
+			entity.Challenger = null;
 		}
 		
 		private void attach_Games1(Game entity)
 		{
 			this.SendPropertyChanging();
-			entity.Player1 = this;
+			entity.Opponent = this;
 		}
 		
 		private void detach_Games1(Game entity)
 		{
 			this.SendPropertyChanging();
-			entity.Player1 = null;
+			entity.Opponent = null;
 		}
 		
 		private void attach_Games2(Game entity)
 		{
 			this.SendPropertyChanging();
-			entity.Player2 = this;
+			entity.Winner = this;
 		}
 		
 		private void detach_Games2(Game entity)
 		{
 			this.SendPropertyChanging();
-			entity.Player2 = null;
+			entity.Winner = null;
 		}
 	}
 }

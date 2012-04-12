@@ -16,7 +16,11 @@
 <script>
     var fbAppID = 342700949110604;
     var userFBID;
-    var oppoenetFBID;
+    var userFirstName;
+    var userLastName;
+    var opponentFBID;
+    var opponentFirstName;
+    var opponentLastName;
     var isMyTurn = false;
     var gameId;
     var userId = @UserID;
@@ -45,7 +49,7 @@
                 else
                 {
                     isMyTurn = false;
-                    $('#turnDialog').html("Waiting for other player");
+                    $('#turnDialog').html("Waiting for " + opponentFirstName);
                 }
 
                 game.setMoves(data.moves);
@@ -60,7 +64,7 @@
                 }, "json");
 
             }
-        }, 1000);
+        }, 5000);
        
 
         window.fbAsyncInit = function () {
@@ -217,9 +221,9 @@
 
         function requestCallback(response)
         {
-            //console.log(response);
+            //console.log(FBID);
             if(response && response.request) {   
-                $.get('/game/create?OpponentFBID='+id+'&appRequest='+response.request, function(data){
+                $.get('/game/create?OpponentFBID='+FBID+'&appRequest='+response.request, function(data){
                     gameId = data.ID;
                     game = data;
                 });
@@ -230,6 +234,7 @@
     }  
 
     function SendMoveAppRequest(FBID) {
+        console.log(FBID);
         FB.ui({
             method: 'apprequests',
             message: "I just moved. It's your turn.",
@@ -237,7 +242,7 @@
         }, 
         function requestCallback(response)
         {
-            //console.log(response);
+            console.log(response);
             if(response && response.request) {   
 
             } else {
@@ -249,10 +254,11 @@
     function playMove(x, y, section) {
         
         DeleteAppRequest(curAppRequest + '_' + userFBID);
-        //SendMoveAppRequest(oppoenetFBID)
+        SendMoveAppRequest(opponentFBID)
 
         $.post("/game/" + gameId + "/playmove", { x: x, y: y }, function (data) {
-            if (data.isValid == true) {
+            if (data.isValid == true) 
+            {
                 section.attr({ fill: fill });
             }
             if (data.winner != null){
@@ -270,28 +276,46 @@
 
         $.get("/game/" + gameId, function(data){ 
             
+            game = data;
+           
+            if (game.PendingPlayerID == userId)
+            {
+                isMyTurn = true;
+                $('#turnDialog').html("It's your turn.");
+            }
+            else
+            {
+                isMyTurn = false;
+                $('#turnDialog').html("Waiting for " + opponentFirstName);
+            }
+
             curAppRequest = data.curAppRequest;
 
-            fill = "#60af75";
-
-            if (data.OpponentID == userId)
+            if (data.CallengerID == userId)
+            {  
+                fill = "#60af75";
+                userFBID = data.ChallengerFBID;
+                userFirstName = data.ChallengerFirstName;
+                userLastName = data.ChallengerLastName;
+                opponentFBID = data.OpponentFBID;
+                opponentFirstName = data.OpponentFirstName;
+                opponentLastName = data.OpponentLastName;
+            }
+            else
+            {
                 fill = "#bb2e36";
-            
+                opponentFBID = data.ChallengerFBID;
+                opponentFirstName = data.ChallengerFirstName;
+                opponentLastName = data.ChallengerLastName;
+                userFBID = data.OpponentFBID;
+                userFirstName = data.OpponentFirstName;
+                userLastName = data.OpponentLastName;
+            }
+
             $('#board').children().remove();
 
             $.get("/game/" + gameId + "/moves", function (data) {
-                game = new DartBoard(null, playMove, data);
-                game.PendingPlayerID = data.PendingPlayerID;
-                if (game.PendingPlayerID == userId)
-                {
-                    isMyTurn = true;
-                    $('#turnDialog').html("It's your turn.");
-                }
-                else
-                {
-                    isMyTurn = false;
-                    $('#turnDialog').html("Waiting for other player");
-                }
+                game = new DartBoard(null, playMove, data); 
             }, "json");
         });
     }  

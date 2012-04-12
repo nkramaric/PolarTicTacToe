@@ -166,7 +166,13 @@ namespace PolarTicTacToe.Models
             API.Game newGame = new API.Game();
 
             newGame.ChallengerID = ChallengerID;
+            newGame.ChallengerFBID = this.Challenger.FacebookID;
+            newGame.ChallengerFirstName = this.Challenger.FirstName;
+            newGame.ChallengerLastName = this.Challenger.LastName;
             newGame.OpponentID = OpponentID;
+            newGame.OpponentFBID = this.Opponent.FacebookID;
+            newGame.OpponentFirstName = this.Opponent.FirstName;
+            newGame.OpponentLastName = this.Opponent.LastName;
             newGame.Moves = Moves;
             newGame.WinnerID = WinnerID;
             newGame.GameState = GameState;
