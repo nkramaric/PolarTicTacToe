@@ -21,6 +21,7 @@
     var game;
     var fill;
     var friendGameStatus;
+    var activeGames;
 
     $(document).ready(function () {
 
@@ -102,9 +103,9 @@
         };
     });
 
-    $.template("Contact", '<li> ' 
+    $.template("Contact", '<li id="contact-${id}"> ' 
     + '<h4>${name}</h4>'
-    + '<a href="#" onclick="${function}">${status}</a>' 
+    + '<a href="#" onclick="${clickFunction}">${status}</a>' 
     + '</li> ');
 
     function UpdateFriendsList()
@@ -117,14 +118,25 @@
             var invitePool = ""; 
 
             for (var i = 0; i < friends.data.length; i++){
-                fbids.push(friends.data[i].id);
+                var friend = friends.data[i];
+                fbids.push(friend.id);
+                if ($('#contact-' + friend.id).length == 0){
+                    $('#friends').append($.tmpl("Contact", { id : friend.id, name : friend.val, status : "invite",  clickFunction : "" }));
+                }
             }
 
             params = $.param({ "fbids" : fbids }, true);
 
             $.get("/games?" + params, null, function(data){
                 
+                activeGames = data;
+
+                for (var i = 0; i < activeGames.length; i++){
+                    $('#contact-' + friend.id)      
+                }
+
                 console.log(data);
+
             }, "json");
 
 
@@ -285,8 +297,8 @@
 
 Search: <input id="searchText" type="text" />
 
-<ul id="friendsList">
-</ul>   
+<ul id="friends">
+</ul>
 
 <h2 id="winner"></h2>
 
