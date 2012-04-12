@@ -12,23 +12,8 @@
     <script type="text/javascript" src="/assets/js/game.js"></script>
 
     <script type="text/javascript">
-        var game;
-        var fill;
-        function playMove(x, y, section) {
-
-            $.post("/game/" + gameId + "/playmove", { x: x, y: y }, function (data) {
-                if (data.isValid == true) {
-                    section.attr({ fill: fill });
-                }
-                if (data.winner != null){
-                    if (data.winner == @UserID){
-                        $('#winner').html("You are the winner!");
-                    }else{
-                        $('#winner').html("You lose!");
-                    }
-                }
-            });
-        }
+      
+      
     </script>
 }
 
@@ -36,6 +21,10 @@
 <script>
     var fbAppID = 342700949110604;
     var userFBID;
+    var gameId;
+    var userId = @UserID;
+    var game;
+    var fill;
 
     $(document).ready(function () {
 
@@ -190,16 +179,32 @@
         function requestCallback(response)
         {
             //console.log(response);
-            if(response && response.request) {
-                    // Here, requests have been sent, facebook gives you the request and the array of recipients 
-                    window.location = '@PolarTicTacToe.Utils.GlobalVars.WEBSITE_URL'+'/game/create?OpponentFBID='+id+'&appRequest='+response.request;
+            if(response && response.request) {   
+                $.get('/game/create?OpponentFBID='+id+'&appRequest='+response.request, function(data){
+                    gameId = data.ID;
+                    game = data;
+                });
             } else {
                     // No requests sent, you can do what you want (like...nothing, and stay on the page).
             }
         });
     }  
 
-    var gameId;
+    function playMove(x, y, section) {
+
+        $.post("/game/" + gameId + "/playmove", { x: x, y: y }, function (data) {
+            if (data.isValid == true) {
+                section.attr({ fill: fill });
+            }
+            if (data.winner != null){
+                if (data.winner == userId) {
+                    $('#winner').html("You are the winner!");
+                }else{
+                    $('#winner').html("You lose!");
+                }
+            }
+        });
+    }
 
     function LoadGame(id) {
         gameId = id;
@@ -208,7 +213,7 @@
 
             fill = "#60af75";
 
-            if (data.OpponentID == @UserID)
+            if (data.OpponentID == userId)
                 fill = "#bb2e36";
             
             $('#board').children().remove();
@@ -222,7 +227,7 @@
                     game.setMoves(data.moves);
                     game.draw();
                     if (data.winner != null){
-                        if (data.winner == @UserID){
+                        if (data.winner == userId){
                             $('#winner').html("You are the winner!");
                         }else{
                             $('#winner').html("You lose!");
