@@ -115,6 +115,15 @@ namespace PolarTicTacToe.Controllers
 
             return Json(curGame.GetApiGame(), JsonRequestBehavior.AllowGet);
         }
+        
+        [HttpGet]
+        public ActionResult SetAppRequest(int id, long appRequest)
+        {
+            var curGame = Game.Get(id);
 
+            curGame.setAppRequest(appRequest);
+
+            return Json(true, JsonRequestBehavior.AllowGet);
+        }
     }
 }

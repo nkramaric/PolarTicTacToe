@@ -218,7 +218,6 @@
             message: 'I challenge you to a game of Polar TicTacToe!',
             to: FBID,
         }, 
-
         function requestCallback(response)
         {
             //console.log(FBID);
@@ -234,7 +233,6 @@
     }  
 
     function SendMoveAppRequest(FBID) {
-        console.log(FBID);
         FB.ui({
             method: 'apprequests',
             message: "I just moved. It's your turn.",
@@ -242,9 +240,9 @@
         }, 
         function requestCallback(response)
         {
-            console.log(response);
             if(response && response.request) {   
-
+                $.get('/game/'+gameId+'/set-app-request?appRequest='+response.request, function(data){});
+                curAppRequest = response.request;
             } else {
                 // No requests sent, you can do what you want (like...nothing, and stay on the page).
             }
@@ -252,23 +250,26 @@
     }  
 
     function playMove(x, y, section) {
-        
-        DeleteAppRequest(curAppRequest + '_' + userFBID);
-        SendMoveAppRequest(opponentFBID)
+        if(isMyTurn)
+        {
+            isMyTurn = false;
+            DeleteAppRequest(curAppRequest + '_' + userFBID);
+            SendMoveAppRequest(opponentFBID)
 
-        $.post("/game/" + gameId + "/playmove", { x: x, y: y }, function (data) {
-            if (data.isValid == true) 
-            {
-                section.attr({ fill: fill });
-            }
-            if (data.winner != null){
-                if (data.winner == userId) {
-                    $('#winner').html("You are the winner!");
-                }else{
-                    $('#winner').html("You lose!");
+            $.post("/game/" + gameId + "/playmove", { x: x, y: y }, function (data) {
+                if (data.isValid == true) 
+                {
+                    section.attr({ fill: fill });
                 }
-            }
-        });
+                if (data.winner != null){
+                    if (data.winner == userId) {
+                        $('#winner').html("You are the winner!");
+                    }else{
+                        $('#winner').html("You lose!");
+                    }
+                }
+            });
+        }
     }
 
     function LoadGame(id) {
@@ -291,7 +292,7 @@
 
             curAppRequest = data.curAppRequest;
 
-            if (data.CallengerID == userId)
+            if (data.ChallengerID == userId)
             {  
                 fill = "#60af75";
                 userFBID = data.ChallengerFBID;
@@ -336,7 +337,8 @@
 
 @ViewBag.access_token
 
-<a id="registerLink" href="https://www.facebook.com/dialog/oauth?client_id=@PolarTicTacToe.Utils.GlobalVars.FB_APP_ID&redirect_uri=@PolarTicTacToe.Utils.GlobalVars.WEBSITE_URL">Register</a>
+@*&scope=publish_stream*@
+<a  href="https://www.facebook.com/dialog/oauth?client_id=@PolarTicTacToe.Utils.GlobalVars.FB_APP_ID&redirect_uri=@PolarTicTacToe.Utils.GlobalVars.WEBSITE_URL">Register</a>
 
 
 <img id="image"/>  
