@@ -1,6 +1,7 @@
 ﻿@{
     ViewBag.Title = "Home Page";
     ViewBag.Title = "Play";
+    int UserID = ViewBag.User != null ? ViewBag.User.ID : -1;
 }
 
 @section ExtraHeaderContent {
@@ -9,6 +10,7 @@
 
 @section FooterScripts {
     <script type="text/javascript" src="/assets/js/game.js"></script>
+<<<<<<< HEAD
 
     <script type="text/javascript">
         var game;
@@ -34,13 +36,23 @@
                 }
         }
     </script>
+=======
+>>>>>>> c249e275406e502f2171915fd77ac4088e8c7c73
 }
 
 <div id="fb-root"></div>
 <script>
     var fbAppID = 342700949110604;
     var userFBID;
+<<<<<<< HEAD
     var isMyTurn = false;
+=======
+    var gameId;
+    var userId = @UserID;
+    var game;
+    var fill;
+    var friendGameStatus;
+>>>>>>> c249e275406e502f2171915fd77ac4088e8c7c73
 
     $(document).ready(function () {
 
@@ -51,6 +63,7 @@
             if(game != null && gameId!= null)
             {
                 $.get("/game/" + gameId + "/moves", function (data) {
+<<<<<<< HEAD
                 
                 curAppRequest = data.curAppRequest;
                 //console.log(data);
@@ -68,15 +81,19 @@
 
                 game.setMoves(data.moves);
                 game.draw();
+=======
+                    game.setMoves(data.moves);
+                    game.draw();
+>>>>>>> c249e275406e502f2171915fd77ac4088e8c7c73
                     if (data.winner != null){
-                        if (data.winner == @ViewBag.User.ID){
+                        if (data.winner == userId){
                             $('#winner').html("You are the winner!");
                         }else{
                             $('#winner').html("You lose!");
                         }
                     }
-               
-                }, "json"); 
+                }, "json");
+
             }
         }, 1000);
        
@@ -236,16 +253,32 @@
         function requestCallback(response)
         {
             //console.log(response);
-            if(response && response.request) {
-                    // Here, requests have been sent, facebook gives you the request and the array of recipients 
-                    window.location = '@PolarTicTacToe.Utils.GlobalVars.WEBSITE_URL'+'/game/create?OpponentFBID='+id+'&appRequest='+response.request;
+            if(response && response.request) {   
+                $.get('/game/create?OpponentFBID='+id+'&appRequest='+response.request, function(data){
+                    gameId = data.ID;
+                    game = data;
+                });
             } else {
                     // No requests sent, you can do what you want (like...nothing, and stay on the page).
             }
         });
     }  
 
-    var gameId;
+    function playMove(x, y, section) {
+
+        $.post("/game/" + gameId + "/playmove", { x: x, y: y }, function (data) {
+            if (data.isValid == true) {
+                section.attr({ fill: fill });
+            }
+            if (data.winner != null){
+                if (data.winner == userId) {
+                    $('#winner').html("You are the winner!");
+                }else{
+                    $('#winner').html("You lose!");
+                }
+            }
+        });
+    }
 
     function LoadGame(id) {
         gameId = id;
@@ -256,7 +289,7 @@
 
             fill = "#60af75";
 
-            if (data.OpponentID == @ViewBag.User.ID)
+            if (data.OpponentID == userId)
                 fill = "#bb2e36";
             
             $('#board').children().remove();
@@ -275,7 +308,11 @@
                     $('#turnDialog').html("Waiting for other player");
                 }
             }, "json");
+<<<<<<< HEAD
            
+=======
+
+>>>>>>> c249e275406e502f2171915fd77ac4088e8c7c73
         });
     }  
 
@@ -308,6 +345,10 @@ Search: <input id="searchText" type="text" />
 
 <h2 id="winner"></h2>
 
+<<<<<<< HEAD
 <h3 id="turnDialog"></h3>
 
 <div id="board" style="width:500px; height:500px;"></div>
+=======
+<div id="board" style="width:500px; height:500px;"></div>
+>>>>>>> c249e275406e502f2171915fd77ac4088e8c7c73

@@ -111,7 +111,7 @@ namespace PolarTicTacToe.Controllers
 
             curGame.setAppRequest(appRequest);
 
-            return RedirectToAction("Play", "Game", new { id = curGame.ID });
+            return Json(curGame.GetApiGame(), JsonRequestBehavior.AllowGet);
         }
 
     }
