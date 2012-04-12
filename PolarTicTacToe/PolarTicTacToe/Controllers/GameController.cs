@@ -87,6 +87,8 @@ namespace PolarTicTacToe.Controllers
                 Game curGame = Game.GetActive(player1.ID, player2.ID);
                 if (curGame != null)
                 {
+                    var p = curGame.GameState.Equals(Utils.GameState.Active.ToString());
+
                     pendingPlayerFBID = Player.GetByID(curGame.PendingPlayerID).FacebookID;
                     gameID = curGame.ID;
                 }

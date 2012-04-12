@@ -36,7 +36,7 @@
                 curAppRequest = data.curAppRequest;
                 //console.log(data);
                 game.PendingPlayerID = data.PendingPlayerID;
-                if (game.PendingPlayerID == @ViewBag.User.ID)
+                if (game.PendingPlayerID == userId)
                 {    
                     isMyTurn = true;
                     $('#turnDialog').html("It's your turn.");
@@ -261,7 +261,7 @@
             $.get("/game/" + gameId + "/moves", function (data) {
                 game = new DartBoard(null, playMove, data);
                 game.PendingPlayerID = data.PendingPlayerID;
-                if (game.PendingPlayerID == @ViewBag.User.ID)
+                if (game.PendingPlayerID == userId)
                 {
                     isMyTurn = true;
                     $('#turnDialog').html("It's your turn.");
