@@ -16,6 +16,7 @@
 <script>
     var fbAppID = 342700949110604;
     var userFBID;
+    var oppoenetFBID;
     var isMyTurn = false;
     var gameId;
     var userId = @UserID;
@@ -201,17 +202,17 @@
         });
     }
 
-    function DeleteRequest(requestId) {
+    function DeleteAppRequest(requestId) {
       FB.api(requestId, 'delete', function(response) {
         console.log(response);
       });
     }
 
-    function Invite(id) {
+    function Invite(FBID) {
         FB.ui({
             method: 'apprequests',
             message: 'I challenge you to a game of Polar TicTacToe!',
-            to: id,
+            to: FBID,
         }, 
 
         function requestCallback(response)
@@ -228,7 +229,27 @@
         });
     }  
 
+    function SendMoveAppRequest(FBID) {
+        FB.ui({
+            method: 'apprequests',
+            message: "I just moved. It's your turn.",
+            to: FBID,
+        }, 
+        function requestCallback(response)
+        {
+            //console.log(response);
+            if(response && response.request) {   
+
+            } else {
+                // No requests sent, you can do what you want (like...nothing, and stay on the page).
+            }
+        });
+    }  
+
     function playMove(x, y, section) {
+        
+        DeleteAppRequest(curAppRequest + '_' + userFBID);
+        //SendMoveAppRequest(oppoenetFBID)
 
         $.post("/game/" + gameId + "/playmove", { x: x, y: y }, function (data) {
             if (data.isValid == true) {
