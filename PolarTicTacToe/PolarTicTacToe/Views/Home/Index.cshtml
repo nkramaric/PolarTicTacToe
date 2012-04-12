@@ -1,6 +1,7 @@
 ﻿@{
     ViewBag.Title = "Home Page";
     ViewBag.Title = "Play";
+    int UserID = ViewBag.User != null ? ViewBag.User.ID : -1;
 }
 
 @section ExtraHeaderContent {
@@ -20,7 +21,7 @@
                     section.attr({ fill: fill });
                 }
                 if (data.winner != null){
-                    if (data.winner == @ViewBag.User.ID){
+                    if (data.winner == @UserID){
                         $('#winner').html("You are the winner!");
                     }else{
                         $('#winner').html("You lose!");
@@ -200,7 +201,7 @@
 
             fill = "#60af75";
 
-            if (data.OpponentID == @ViewBag.User.ID)
+            if (data.OpponentID == @UserID)
                 fill = "#bb2e36";
             
             $('#board').children().remove();
@@ -214,7 +215,7 @@
                     game.setMoves(data.moves);
                     game.draw();
                     if (data.winner != null){
-                        if (data.winner == @ViewBag.User.ID){
+                        if (data.winner == @UserID){
                             $('#winner').html("You are the winner!");
                         }else{
                             $('#winner').html("You lose!");
