@@ -104,11 +104,13 @@
     function UpdateFriendsList()
     {
         FB.api('/me/friends', function (friends) { 
-
+            
+                  
             var fbids = [];
 
             for (var i = 0; i < friends.data.length; i++){
                 var friend = friends.data[i];
+               
                 fbids.push(friend.id);
                 if ($('#contact-' + friend.id).length == 0){
                     $('#friends').append($.tmpl("Contact", { id : friend.id, name : friend.name, status : "invite"}));
@@ -274,14 +276,20 @@
             userFirstName = data.ChallengerFirstName;
             userLastName = data.ChallengerLastName;
             opponentFBID = data.OpponentFBID;
-            opponentFirstName = data.OpponentFirstName;
+            if (data.OpponentFirstName != null)
+                opponentFirstName = data.OpponentFirstName;
+            else
+                opponentFirstName = "other player";
             opponentLastName = data.OpponentLastName;
         }
         else
         {
             fill = "#bb2e36";
-            opponentFBID = data.ChallengerFBID;
-            opponentFirstName = data.ChallengerFirstName;
+            opponentFBID = data.ChallengerFBID; 
+            if (data.ChallengerFirstName != null)
+                opponentFirstName = data.ChallengerFirstName;
+            else
+                opponentFirstName = "other player";
             opponentLastName = data.ChallengerLastName;
             userFBID = data.OpponentFBID;
             userFirstName = data.OpponentFirstName;
