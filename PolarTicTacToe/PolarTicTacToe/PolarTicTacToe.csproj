@@ -63,6 +63,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\js\jquery.tmpl.min.js" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\GameController.cs" />
@@ -81,6 +82,7 @@
       <DependentUpon>PolarTicTacToe.dbml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Utils\GameRules.cs" />
     <Compile Include="Utils\GameState.cs" />
     <Compile Include="Utils\GlobalVars.cs" />

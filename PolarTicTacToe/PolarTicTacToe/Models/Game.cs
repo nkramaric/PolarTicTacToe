@@ -97,7 +97,7 @@ namespace PolarTicTacToe.Models
                     return new List<Move>();
                 }
 
-                CultureInfo provider = CultureInfo.InvariantCulture;
+                //CultureInfo provider = CultureInfo.InvariantCulture;
                 var splitMoves = Moves.Split(new char[]{','}, StringSplitOptions.RemoveEmptyEntries);
                 var MoveList = new List<Move>();
                 int? userID = ChallengerID;
@@ -107,7 +107,7 @@ namespace PolarTicTacToe.Models
                     string[] splitMove = curMove.Split(';');
                     int x = int.Parse(splitMove[0]);
                     int y = int.Parse(splitMove[1]);
-                    DateTime time = DateTime.Parse(splitMove[2], provider);
+                    DateTime time = DateTime.Parse(splitMove[2]);
                     MoveList.Add(new Move() { position = new Coordinate(x, y), time = time, UserID = userID.Value });
                     userID = userID == ChallengerID ? OpponentID : ChallengerID;
                 }
@@ -130,6 +130,15 @@ namespace PolarTicTacToe.Models
                     return MoveList.Last().UserID == ChallengerID ? OpponentID.Value : ChallengerID;
                 }
             } 
+        }
+
+        public Player PendingPlayer
+        {
+            get
+            {
+                PolarTicTacToeDataContext dataContext = new PolarTicTacToeDataContext();
+                return (from p in dataContext.Players where PendingPlayerID == p.ID select p).FirstOrDefault(); 
+            }
         }
 
         public Move GetPosition(int x, int y)
@@ -177,8 +186,17 @@ namespace PolarTicTacToe.Models
             newGame.GameState = GameState;
             newGame.curAppRequest = CurAppRequest;
             newGame.PendingPlayerID = PendingPlayerID;
+            newGame.PendingPlayerFBID = PendingPlayer.FacebookID;
             newGame.ID = ID;
+
             return newGame;
+        }
+
+        internal static List<Game> GetActive(int id)
+        {
+            PolarTicTacToeDataContext dataContext = new PolarTicTacToeDataContext();
+
+            return (from p in dataContext.Games where p.OpponentID == id || p.ChallengerID == id select p).ToList();
         }
     }
 }

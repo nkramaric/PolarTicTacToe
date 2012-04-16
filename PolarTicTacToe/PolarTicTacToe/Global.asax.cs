@@ -45,6 +45,12 @@ namespace PolarTicTacToe
                 new { controller = "Game", action = "Get" } // Parameter defaults
            );
 
+              routes.MapRoute(
+               "SetAppRequest",
+               "game/{id}/set-app-request",
+                new { controller = "Game", action = "SetAppRequest" } // Parameter defaults
+           );
+
             routes.MapRoute(
                "GetActiveGames",
                "games",

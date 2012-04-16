@@ -21,5 +21,6 @@ namespace PolarTicTacToe.Models.API
         public long? curAppRequest;
         public int ID;
         public int? PendingPlayerID;
+        public long? PendingPlayerFBID;
     }
 }
