@@ -105,6 +105,11 @@
     {
         FB.api('/me/friends', function (friends) { 
             
+            var friendSource = $.map(friends.data, function(val, i){
+                return {
+                    value: val.id,
+                };
+            });
                   
             var fbids = [];
 
