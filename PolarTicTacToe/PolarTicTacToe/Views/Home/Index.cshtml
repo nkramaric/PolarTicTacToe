@@ -104,8 +104,7 @@
     function UpdateFriendsList()
     {
         FB.api('/me/friends', function (friends) { 
-            
-                  
+                
             var fbids = [];
 
             for (var i = 0; i < friends.data.length; i++){
@@ -154,13 +153,14 @@
 
                 gamesHash[activeGames[i].ID] = activeGames[i];
             }
-            console.log(data);
+            //console.log(data);
         }, "json");
     }
 
 
     function DeleteAppRequest(requestId) {
       FB.api(requestId, 'delete', function(response) {
+        console.log('delete app request: ');
         console.log(response);
       });
     }
@@ -173,7 +173,7 @@
         }, 
         function requestCallback(response)
         {
-            //console.log(FBID);
+            console.log(response);
             if(response && response.request) {   
                 $.get('/game/create?OpponentFBID='+FBID+'&appRequest='+response.request, function(data){
                     gameId = data.ID;
@@ -215,6 +215,7 @@
                     section.attr({ fill: fill });
                 }
                 if (data.winner != null){
+                    $('#turnDialog').html("");
                     if (data.winner == userId) {
                         $('#winner').html("You are the winner!");
                     }else{
@@ -250,6 +251,7 @@
                 game.draw();
 
                 if (data.winner != null){
+                    $('#turnDialog').html("");
                     if (data.winner == userId){
                         $('#winner').html("You are the winner!");
                     }else{
@@ -331,8 +333,7 @@
 @ViewBag.access_token
 
 @*&scope=publish_stream*@
-<a  href="https://www.facebook.com/dialog/oauth?client_id=@PolarTicTacToe.Utils.GlobalVars.FB_APP_ID&redirect_uri=@PolarTicTacToe.Utils.GlobalVars.WEBSITE_URL">Register</a>
-
+<a id="registerLink" href="https://www.facebook.com/dialog/oauth?client_id=@PolarTicTacToe.Utils.GlobalVars.FB_APP_ID&redirect_uri=@PolarTicTacToe.Utils.GlobalVars.WEBSITE_URL">Register</a>
 
 <img id="image"/>  
 <p id="name" style="padding-bottom:7px; font-weight:bold; font-size:13px;" color="white"></p>
