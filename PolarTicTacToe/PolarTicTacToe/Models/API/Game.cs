@@ -19,6 +19,7 @@ namespace PolarTicTacToe.Models.API
         public int? WinnerID;
         public string GameState;
         public long? curAppRequest;
-        public int? PendingPlayerID;
+        public int PendingPlayerID;
+        public int ID;
     }
 }

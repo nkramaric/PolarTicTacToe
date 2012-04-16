@@ -28,6 +28,9 @@ namespace PolarTicTacToe.Controllers
 
         private Player currentUser = null;
 
+        /// <summary>
+        /// Check if user is logged in
+        /// </summary>
         protected Player CurrentUser
         {
             get
