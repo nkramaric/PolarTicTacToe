@@ -98,19 +98,19 @@
 
     $.template("Contact", '<li id="contact-${id}"> ' +
     '<h4>${name}</h4>' +
-    '<a href="#" data-game-id="-1">${status}</a>' +
+    '<a href="#" data-fbid="${id}" data-game-id="-1">${status}</a>' +
     '</li> ');
 
     function UpdateFriendsList()
     {
         FB.api('/me/friends', function (friends) { 
-            
+
             var friendSource = $.map(friends.data, function(val, i){
                 return {
                     value: val.id,
                 };
             });
-                  
+                       
             var fbids = [];
 
             for (var i = 0; i < friends.data.length; i++){
@@ -119,8 +119,8 @@
                 fbids.push(friend.id);
                 if ($('#contact-' + friend.id).length == 0){
                     $('#friends').append($.tmpl("Contact", { id : friend.id, name : friend.name, status : "invite"}));
-                    $('#contact-' +  friend.id + " a").click(function(){
-                        Invite(friend.id);
+                    $('#contact-' + friend.id + " a").click(function(){
+                        Invite($(this).attr('data-fbid'));
                     });
                 }
             }
@@ -159,13 +159,14 @@
 
                 gamesHash[activeGames[i].ID] = activeGames[i];
             }
-            console.log(data);
+            //console.log(data);
         }, "json");
     }
 
 
     function DeleteAppRequest(requestId) {
       FB.api(requestId, 'delete', function(response) {
+        console.log('delete app request: ');
         console.log(response);
       });
     }
@@ -178,11 +179,11 @@
         }, 
         function requestCallback(response)
         {
-            //console.log(FBID);
+            console.log(response);
             if(response && response.request) {   
                 $.get('/game/create?OpponentFBID='+FBID+'&appRequest='+response.request, function(data){
                     gameId = data.ID;
-                    //game = data;
+                    LoadGame(gameId);
                 });
             } else {
                     // No requests sent, you can do what you want (like...nothing, and stay on the page).
@@ -220,6 +221,7 @@
                     section.attr({ fill: fill });
                 }
                 if (data.winner != null){
+                    $('#turnDialog').html("");
                     if (data.winner == userId) {
                         $('#winner').html("You are the winner!");
                     }else{
@@ -255,6 +257,7 @@
                 game.draw();
 
                 if (data.winner != null){
+                    $('#turnDialog').html("");
                     if (data.winner == userId){
                         $('#winner').html("You are the winner!");
                     }else{
@@ -336,8 +339,7 @@
 @ViewBag.access_token
 
 @*&scope=publish_stream*@
-<a  href="https://www.facebook.com/dialog/oauth?client_id=@PolarTicTacToe.Utils.GlobalVars.FB_APP_ID&redirect_uri=@PolarTicTacToe.Utils.GlobalVars.WEBSITE_URL">Register</a>
-
+<a id="registerLink" href="https://www.facebook.com/dialog/oauth?client_id=@PolarTicTacToe.Utils.GlobalVars.FB_APP_ID&redirect_uri=@PolarTicTacToe.Utils.GlobalVars.WEBSITE_URL">Register</a>
 
 <img id="image"/>  
 <p id="name" style="padding-bottom:7px; font-weight:bold; font-size:13px;" color="white"></p>

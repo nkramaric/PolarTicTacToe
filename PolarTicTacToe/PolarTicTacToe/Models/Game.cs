@@ -196,7 +196,7 @@ namespace PolarTicTacToe.Models
         {
             PolarTicTacToeDataContext dataContext = new PolarTicTacToeDataContext();
 
-            return (from p in dataContext.Games where p.OpponentID == id || p.ChallengerID == id select p).ToList();
+            return (from p in dataContext.Games where p.GameState.Equals(Utils.GameState.Active.ToString()) && (p.OpponentID == id || p.ChallengerID == id) select p).ToList();
         }
     }
 }
