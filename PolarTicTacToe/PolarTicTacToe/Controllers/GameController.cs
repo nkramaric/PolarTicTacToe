@@ -47,7 +47,7 @@ namespace PolarTicTacToe.Controllers
             //refresh
             game = Game.Get(id);
 
-            return Json(new { isValid = isValid, winner = game.WinnerID }, JsonRequestBehavior.DenyGet);
+            return Json(new { isValid = isValid, winner = game.WinnerID, fistMove = game.MoveList.Count == 1 }, JsonRequestBehavior.DenyGet);
         }
 
         [HttpGet]

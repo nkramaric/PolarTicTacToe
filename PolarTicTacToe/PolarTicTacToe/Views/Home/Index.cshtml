@@ -213,7 +213,6 @@
         {
             isMyTurn = false;
             DeleteAppRequest(curAppRequest + '_' + userFBID);
-            SendMoveAppRequest(opponentFBID)
 
             $.post("/game/" + gameId + "/playmove", { x: x, y: y }, function (data) {
                 if (data.isValid == true) 
@@ -227,6 +226,11 @@
                     }else{
                         $('#winner').html("You lose!");
                     }
+                }
+                else
+                {
+                    if(!data.fistMove)
+                        SendMoveAppRequest(opponentFBID)
                 }
             });
 
