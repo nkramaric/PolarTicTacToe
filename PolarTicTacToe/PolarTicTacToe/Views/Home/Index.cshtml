@@ -2,10 +2,12 @@
     ViewBag.Title = "Home Page";
     ViewBag.Title = "Play";
     int UserID = ViewBag.User != null ? ViewBag.User.ID : -1;
+    long UserFacebookID = ViewBag.User != null ? ViewBag.User.FacebookID : -1;
 }
 
 @section ExtraHeaderContent {
 <script type="text/javascript" src="/Assets/js/raphael-min.js"></script>
+<script type="text/javascript" src="/Assets/js/jquery.tmpl.min.js"></script>
 }
 
 @section FooterScripts {
@@ -27,13 +29,16 @@
     var game;
     var fill;
     var friendGameStatus;
+    var activeGames;
+    var friendGameStatus;
+    var gamesHash = {};
 
     $(document).ready(function () {
 
         setInterval(function () {
-            //UpdateFriendsList();
+            UpdateFriendsList();
             UpdateGame();
-        }, 5000);
+        }, 1000);
        
         window.fbAsyncInit = function () {
             FB.init({
@@ -91,140 +96,66 @@
         };
     });
 
-    $.template("Contact", '<li> ' 
-    + '<h4>${name}</h4>'
-    + '<a href="#" onclick="${function}">${status}</a>' 
-    + '</li> ');
+    $.template("Contact", '<li id="contact-${id}"> ' +
+    '<h4>${name}</h4>' +
+    '<a href="#" data-game-id="-1">${status}</a>' +
+    '</li> ');
 
     function UpdateFriendsList()
     {
         FB.api('/me/friends', function (friends) { 
 
             var fbids = [];
-            var playPool = "";
-            var waitingPool = "";
-            var invitePool = ""; 
-
-//            $.each(friendSource, function (i, friend) {
-
-//                $.ajax({ url: "/game/get", data: { FBID1: userFBID, FBID2: friend.value }, async: true, dataType: "json", type: "post", success: function (gameData) { 
-//                   
-//                        friend.gameID = gameData.gameID;
-//                        var tempString = "";
-
-//                        tempString += '<li>';
-//                        tempString += '<h4>'+friend.label+'</h4>'; 
-//                        if(gameData.pendingPlayerFBID == null)
-//                        {
-//                            tempString += '<a href="#" onclick="Invite(' + friend.value + ')">Invite</a>';
-//                            friend.gameState = "Invite";
-//                        }
-//                        else if(gameData.pendingPlayerFBID == userFBID)
-//                        {
-//                            tempString += '<a href="#" onclick="LoadGame(' + gameData.gameID + ')" >Play</a>';
-//                            friend.gameState = "Play";
-//                        }
-//                        else
-//                        {
-//                            tempString += '<a href="#" onclick="LoadGame(' + gameData.gameID + ')" >Waiting...</a>';
-//                            friend.gameState = "Waiting...";
-//                        }
-//                        tempString += '</li>';
-//                            
-//                        if(friend.gameState == "Play")
-//                        {
-//                            playPool += tempString;
-//                        }
-//                        else if (friend.gameState == "Waiting...")
-//                        {
-//                            waitingPool += tempString;
-//                        }
-//                        else
-//                        {
-//                            invitePool += tempString;
-//                        }
 
             for (var i = 0; i < friends.data.length; i++){
-                fbids.push(friends.data[i].id);
+                var friend = friends.data[i];
+                fbids.push(friend.id);
+                if ($('#contact-' + friend.id).length == 0){
+                    $('#friends').append($.tmpl("Contact", { id : friend.id, name : friend.name, status : "invite"}));
+                    $('#contact-' +  friend.id + " a").click(function(){
+                        Invite(friend.id);
+                    });
+                }
             }
 
-            params = $.param({ "fbids" : fbids }, true);
-
-            $.get("/games?" + params, null, function(data){
-                
-                console.log(data);
-            }, "json");
-
-
-
-//            $.each(friendSource, function (i, friend) {
-
-//                $.ajax({ url: "/game/get", data: { FBID1: userFBID, FBID2: friend.value }, async: true, dataType: "json", type: "post", success: function (gameData) { 
-//                   
-//                        friend.gameID = gameData.gameID;
-//                        var tempString = "";
-
-//                        tempString += '<li>';
-//                        tempString += '<h4>'+friend.label+'</h4>'; 
-//                        if(gameData.pendingPlayerFBID == null)
-//                        {
-//                            tempString += '<a href="#" onclick="Invite(' + friend.value + ')">Invite</a>';
-//                            friend.gameState = "Invite";
-//                        }
-//                        else if(gameData.pendingPlayerFBID == userFBID)
-//                        {
-//                            tempString += '<a href="#" onclick="LoadGame(' + gameData.gameID + ')" >Play</a>';
-//                            friend.gameState = "Play";
-//                        }
-//                        else
-//                        {
-//                            tempString += 'Waiting...';
-//                            friend.gameState = "Waiting...";
-//                        }
-//                        tempString += '</li>';
-//                            
-//                        if(friend.gameState == "Play")
-//                        {
-//                            playPool += tempString;
-//                        }
-//                        else if (friend.gameState == "Waiting...")
-//                        {
-//                            waitingPool += tempString;
-//                        }
-//                        else
-//                        {
-//                            invitePool += tempString;
-//                        }
-
-//                        var newPool = playPool + waitingPool + invitePool;
-
-//                        $('#friendsList').html(newPool);
-
-//                        // update autocomplete
-//                        $("#searchText").autocomplete({
-//			                source: friendSource,
-//                            select: function(event, item) {
-//                                if(item.item.gameState == "Invite")
-//                                {
-//                                    Invite(item.item.value);
-//                                }
-//                                else 
-//                                {
-//                                    LoadGame(item.item.gameID);
-//                                }
-//                                return false;
-//                            },
-//		                }).data("autocomplete")._renderItem = function (ul, item) {
-//                            return $("<li></li>")
-//	                        .data("item.autocomplete", item)
-//	                        .append('<a><div><h4>' + item.label + '</h4></div><div>' + item.gameState + '</div></a>')
-//	                        .appendTo(ul);
-//                        };
-
-//                }});
-//            });
+            SetFriendsGames();
         });
     }
+
+    function SetFriendsGames(){
+        
+        $.get("/games", null, function(data){    
+            activeGames = data;
+            for (var i = 0; i < activeGames.length; i++){
+                var friendID = -1;
+                var status = "";
+
+                if (activeGames[i].PendingPlayerFBID == @UserFacebookID){
+                    if (activeGames[i].ChallengerFBID == @UserFacebookID){
+                        friendID = activeGames[i].OpponentFBID;
+                    }else{
+                        friendID = activeGames[i].ChallengerFBID;
+                    }
+                    status = "waiting";
+                }else{
+                    status = "your turn";
+                    friendID = activeGames[i].PendingPlayerFBID;     
+                }
+
+                $('#contact-' + friendID + " a").html(status);
+                $('#contact-' + friendID + " a").attr('data-game-id', activeGames[i].ID);
+
+                $('#contact-' + friendID + " a").click(function(){
+                    var gameId = parseInt($(this).attr('data-game-id'));
+                    LoadGame(gameId);
+                });
+
+                gamesHash[activeGames[i].ID] = activeGames[i];
+            }
+            console.log(data);
+        }, "json");
+    }
+
 
     function DeleteAppRequest(requestId) {
       FB.api(requestId, 'delete', function(response) {
@@ -244,7 +175,7 @@
             if(response && response.request) {   
                 $.get('/game/create?OpponentFBID='+FBID+'&appRequest='+response.request, function(data){
                     gameId = data.ID;
-                    game = data;
+                    //game = data;
                 });
             } else {
                     // No requests sent, you can do what you want (like...nothing, and stay on the page).
@@ -295,15 +226,14 @@
     }
 
      function UpdateGame()
-       {
-            if(game != null && gameId!= null)
-            {
-                $.get("/game/" + gameId + "/moves", function (data) {
+     {
+        if(game != null && gameId!= null)
+        {
+            $.get("/game/" + gameId + "/moves", function (data) {
                 
-                curAppRequest = data.curAppRequest;
-                //console.log(data);
-                game.PendingPlayerID = data.PendingPlayerID;
-                if (game.PendingPlayerID == userId)
+                curAppRequest = data.curAppRequest;                
+            
+                if (data.PendingPlayerID == userId)
                 {    
                     isMyTurn = true;
                     $('#turnDialog').html("It's your turn.");
@@ -323,58 +253,56 @@
                             $('#winner').html("You lose!");
                         }
                     }
-                }, "json");
+            }, "json");
 
-            }
-       }
+        }
+    }
 
     function LoadGame(id) {
+
         gameId = id;
+        
+        data = gamesHash[id];
+          
+        curAppRequest = data.curAppRequest;
 
-        $.get("/game/" + gameId, function(data){ 
-            
-            game = data;
-           
-            if (game.PendingPlayerID == userId)
-            {
-                isMyTurn = true;
-                $('#turnDialog').html("It's your turn.");
-            }
-            else
-            {
-                isMyTurn = false;
-                $('#turnDialog').html("Waiting for " + opponentFirstName);
-            }
+        if (data.ChallengerID == userId)
+        {  
+            fill = "#60af75";
+            userFBID = data.ChallengerFBID;
+            userFirstName = data.ChallengerFirstName;
+            userLastName = data.ChallengerLastName;
+            opponentFBID = data.OpponentFBID;
+            opponentFirstName = data.OpponentFirstName;
+            opponentLastName = data.OpponentLastName;
+        }
+        else
+        {
+            fill = "#bb2e36";
+            opponentFBID = data.ChallengerFBID;
+            opponentFirstName = data.ChallengerFirstName;
+            opponentLastName = data.ChallengerLastName;
+            userFBID = data.OpponentFBID;
+            userFirstName = data.OpponentFirstName;
+            userLastName = data.OpponentLastName;
+        }
+        
+        if (data.PendingPlayerID == userId)
+        {
+            isMyTurn = true;
+            $('#turnDialog').html("It's your turn.");
+        }
+        else
+        {
+            isMyTurn = false;
+            $('#turnDialog').html("Waiting for " + opponentFirstName);
+        }
 
-            curAppRequest = data.curAppRequest;
+        $('#board').children().remove();
 
-            if (data.ChallengerID == userId)
-            {  
-                fill = "#60af75";
-                userFBID = data.ChallengerFBID;
-                userFirstName = data.ChallengerFirstName;
-                userLastName = data.ChallengerLastName;
-                opponentFBID = data.OpponentFBID;
-                opponentFirstName = data.OpponentFirstName;
-                opponentLastName = data.OpponentLastName;
-            }
-            else
-            {
-                fill = "#bb2e36";
-                opponentFBID = data.ChallengerFBID;
-                opponentFirstName = data.ChallengerFirstName;
-                opponentLastName = data.ChallengerLastName;
-                userFBID = data.OpponentFBID;
-                userFirstName = data.OpponentFirstName;
-                userLastName = data.OpponentLastName;
-            }
-
-            $('#board').children().remove();
-
-            $.get("/game/" + gameId + "/moves", function (data) {
-                game = new DartBoard(null, playMove, data); 
-            }, "json");
-        });
+        $.get("/game/" + gameId + "/moves", function (data) {
+            game = new DartBoard(null, playMove, data); 
+        }, "json");
     }  
 
     (function () {
@@ -402,8 +330,8 @@
 
 Search: <input id="searchText" type="text" />
 
-<ul id="friendsList">
-</ul>   
+<ul id="friends">
+</ul>
 
 <h2 id="winner"></h2>
 

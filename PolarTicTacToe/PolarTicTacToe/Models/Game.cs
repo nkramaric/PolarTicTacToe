@@ -132,6 +132,15 @@ namespace PolarTicTacToe.Models
             } 
         }
 
+        public Player PendingPlayer
+        {
+            get
+            {
+                PolarTicTacToeDataContext dataContext = new PolarTicTacToeDataContext();
+                return (from p in dataContext.Players where PendingPlayerID == p.ID select p).FirstOrDefault(); 
+            }
+        }
+
         public Move GetPosition(int x, int y)
         {
             Move item;
@@ -176,10 +185,18 @@ namespace PolarTicTacToe.Models
             newGame.WinnerID = WinnerID;
             newGame.GameState = GameState;
             newGame.curAppRequest = CurAppRequest;
-            newGame.PendingPlayerID = this.PendingPlayerID;
+            newGame.PendingPlayerID = PendingPlayerID;
+            newGame.PendingPlayerFBID = PendingPlayer.FacebookID;
             newGame.ID = ID;
 
             return newGame;
+        }
+
+        internal static List<Game> GetActive(int id)
+        {
+            PolarTicTacToeDataContext dataContext = new PolarTicTacToeDataContext();
+
+            return (from p in dataContext.Games where p.OpponentID == id || p.ChallengerID == id select p).ToList();
         }
     }
 }

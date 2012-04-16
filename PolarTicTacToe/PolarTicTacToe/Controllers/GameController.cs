@@ -98,21 +98,11 @@ namespace PolarTicTacToe.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetGames(long[] fbids)
+        public ActionResult GetGames()
         {
-            List<Models.API.Game> Games = new List<Models.API.Game>();
-
-            foreach (var fbid in fbids)
-            {
-                var player2 = Player.GetByFBID(fbid);
-                Game curGame = Game.GetActive(CurrentUser.ID, player2.ID);
-                if (curGame != null)
-                {
-                    Games.Add(curGame.GetApiGame());
-                }
-            }
-
-            return Json(Games, JsonRequestBehavior.AllowGet);
+            List<Game> games = Game.GetActive(CurrentUser.ID);
+            
+            return Json(games.ToList(p => p.GetApiGame()), JsonRequestBehavior.AllowGet);
         }
 
 
