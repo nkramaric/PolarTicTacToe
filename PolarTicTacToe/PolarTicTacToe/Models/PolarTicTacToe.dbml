@@ -10,9 +10,9 @@
       <Column Name="GameState" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="StartDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="CurAppRequest" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Association Name="Player_Game" Member="Player" ThisKey="ChallengerID" OtherKey="ID" Type="Player" IsForeignKey="true" />
-      <Association Name="Player_Game1" Member="Player1" ThisKey="OpponentID" OtherKey="ID" Type="Player" IsForeignKey="true" />
-      <Association Name="Player_Game2" Member="Player2" ThisKey="WinnerID" OtherKey="ID" Type="Player" IsForeignKey="true" />
+      <Association Name="Player_Game" Member="Challenger" Storage="_Player" ThisKey="ChallengerID" OtherKey="ID" Type="Player" IsForeignKey="true" />
+      <Association Name="Player_Game1" Member="Opponent" Storage="_Player1" ThisKey="OpponentID" OtherKey="ID" Type="Player" IsForeignKey="true" />
+      <Association Name="Player_Game2" Member="Winner" Storage="_Player2" ThisKey="WinnerID" OtherKey="ID" Type="Player" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Players" Member="Players">

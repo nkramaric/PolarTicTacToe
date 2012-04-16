@@ -51,7 +51,7 @@ namespace PolarTicTacToe.Models
         {
             PolarTicTacToeDataContext dataContext = new PolarTicTacToeDataContext();
 
-            return (from p in dataContext.Games where p.GameState == Utils.GameState.Active.ToString() && (p.OpponentID == ID1 && p.ChallengerID == ID2) || (p.ChallengerID == ID1 && p.OpponentID == ID2) select p).FirstOrDefault();
+            return (from p in dataContext.Games where p.GameState.Equals(Utils.GameState.Active.ToString()) && ((p.OpponentID == ID1 && p.ChallengerID == ID2) || (p.ChallengerID == ID1 && p.OpponentID == ID2)) select p).FirstOrDefault();
         }
         internal static bool PlayMove(int id, int player, Tuple<int, int> spot, out int? winner, out string message)
         {
@@ -165,14 +165,19 @@ namespace PolarTicTacToe.Models
             API.Game newGame = new API.Game();
 
             newGame.ChallengerID = ChallengerID;
+            newGame.ChallengerFBID = this.Challenger.FacebookID;
+            newGame.ChallengerFirstName = this.Challenger.FirstName;
+            newGame.ChallengerLastName = this.Challenger.LastName;
             newGame.OpponentID = OpponentID;
+            newGame.OpponentFBID = this.Opponent.FacebookID;
+            newGame.OpponentFirstName = this.Opponent.FirstName;
+            newGame.OpponentLastName = this.Opponent.LastName;
             newGame.Moves = Moves;
             newGame.WinnerID = WinnerID;
             newGame.GameState = GameState;
             newGame.curAppRequest = CurAppRequest;
             newGame.PendingPlayerID = PendingPlayerID;
             newGame.ID = ID;
-
             return newGame;
         }
     }

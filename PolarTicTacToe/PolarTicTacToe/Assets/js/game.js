@@ -33,7 +33,6 @@ DartBoard = (function () {
     };
     DartBoard.prototype.emitCoordinates = function (x, y, section) {
         this.postAction(x, y, section);
-        console.log(section);
     };
     DartBoard.prototype.findSectionIndex = function (x, y) {
         for (var i = 0; i < this.moves.length; i++) {
@@ -192,10 +191,12 @@ BoardSlice = (function () {
         return set;
     };
     BoardSlice.prototype.sectionHoverIn = function (section) {
-        section.toFront();
-        return section.animate({
-            scale: "1.07"
-        }, 250, "bounce");
+        if (isMyTurn) {
+            section.toFront();
+            return section.animate({
+                scale: "1.07"
+            }, 250, "bounce");
+        }
     };
     BoardSlice.prototype.sectionHoverOut = function (section) {
         section.stop();

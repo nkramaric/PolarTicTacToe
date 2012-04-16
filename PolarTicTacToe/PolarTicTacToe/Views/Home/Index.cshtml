@@ -16,12 +16,19 @@
 <script>
     var fbAppID = 342700949110604;
     var userFBID;
+    var userFirstName;
+    var userLastName;
+    var opponentFBID;
+    var opponentFirstName;
+    var opponentLastName;
+    var isMyTurn = false;
     var gameId;
     var userId = @UserID;
     var game;
     var fill;
     var friendGameStatus;
     var activeGames;
+    var friendGameStatus;
 
     $(document).ready(function () {
 
@@ -32,8 +39,23 @@
             if(game != null && gameId!= null)
             {
                 $.get("/game/" + gameId + "/moves", function (data) {
-                    game.setMoves(data.moves);
-                    game.draw();
+                
+                curAppRequest = data.curAppRequest;
+                //console.log(data);
+                game.PendingPlayerID = data.PendingPlayerID;
+                if (game.PendingPlayerID == userId)
+                {    
+                    isMyTurn = true;
+                    $('#turnDialog').html("It's your turn.");
+                }
+                else
+                {
+                    isMyTurn = false;
+                    $('#turnDialog').html("Waiting for " + opponentFirstName);
+                }
+
+                game.setMoves(data.moves);
+                game.draw();
                     if (data.winner != null){
                         if (data.winner == userId){
                             $('#winner').html("You are the winner!");
@@ -44,7 +66,7 @@
                 }, "json");
 
             }
-        }, 1000);
+        }, 5000);
        
 
         window.fbAsyncInit = function () {
@@ -105,7 +127,7 @@
 
     $.template("Contact", '<li id="contact-${id}"> ' 
     + '<h4>${name}</h4>'
-    + '<a href="#" onclick="${clickFunction}">${status}</a>' 
+    + '<a href="#">${status}</a>' 
     + '</li> ');
 
     function UpdateFriendsList()
@@ -113,33 +135,29 @@
         FB.api('/me/friends', function (friends) { 
 
             var fbids = [];
-            var playPool = "";
-            var waitingPool = "";
-            var invitePool = ""; 
 
             for (var i = 0; i < friends.data.length; i++){
                 var friend = friends.data[i];
                 fbids.push(friend.id);
                 if ($('#contact-' + friend.id).length == 0){
-                    $('#friends').append($.tmpl("Contact", { id : friend.id, name : friend.val, status : "invite",  clickFunction : "" }));
+                    $('#friends').append($.tmpl("Contact", { id : friend.id, name : friend.val, status : "invite"}));
+                    $('#contact-' +  friend.id).click(function(){
+                        LoadGame(friend.val);
+                    });
                 }
             }
 
             params = $.param({ "fbids" : fbids }, true);
 
-            $.get("/games?" + params, null, function(data){
-                
+            $.get("/games?" + params, null, function(data){    
                 activeGames = data;
 
                 for (var i = 0; i < activeGames.length; i++){
-                    $('#contact-' + friend.id)      
+                    $('#contact-' + friend.id + " a")      
                 }
 
                 console.log(data);
-
             }, "json");
-
-
 
 //            $.each(friendSource, function (i, friend) {
 
@@ -210,24 +228,24 @@
         });
     }
 
-    function DeleteRequest(requestId) {
+    function DeleteAppRequest(requestId) {
       FB.api(requestId, 'delete', function(response) {
         console.log(response);
       });
     }
 
-    function Invite(id) {
+    function Invite(FBID) {
         FB.ui({
             method: 'apprequests',
             message: 'I challenge you to a game of Polar TicTacToe!',
-            to: id,
+            to: FBID,
         }, 
 
         function requestCallback(response)
         {
-            //console.log(response);
+            //console.log(FBID);
             if(response && response.request) {   
-                $.get('/game/create?OpponentFBID='+id+'&appRequest='+response.request, function(data){
+                $.get('/game/create?OpponentFBID='+FBID+'&appRequest='+response.request, function(data){
                     gameId = data.ID;
                     game = data;
                 });
@@ -237,10 +255,32 @@
         });
     }  
 
+    function SendMoveAppRequest(FBID) {
+        console.log(FBID);
+        FB.ui({
+            method: 'apprequests',
+            message: "I just moved. It's your turn.",
+            to: FBID,
+        }, 
+        function requestCallback(response)
+        {
+            console.log(response);
+            if(response && response.request) {   
+
+            } else {
+                // No requests sent, you can do what you want (like...nothing, and stay on the page).
+            }
+        });
+    }  
+
     function playMove(x, y, section) {
+        
+        DeleteAppRequest(curAppRequest + '_' + userFBID);
+        SendMoveAppRequest(opponentFBID)
 
         $.post("/game/" + gameId + "/playmove", { x: x, y: y }, function (data) {
-            if (data.isValid == true) {
+            if (data.isValid == true) 
+            {
                 section.attr({ fill: fill });
             }
             if (data.winner != null){
@@ -256,26 +296,55 @@
     function LoadGame(id) {
         gameId = id;
 
-        $.get("/game/" + gameId, function(data){
-            curAppRequest = data.curAppRequest;
-            fill = "#60af75";
-
-            if (data.OpponentID == userId)
-                fill = "#bb2e36";
+        $.get("/game/" + gameId, function(data){ 
             
+            game = data;
+           
+            if (game.PendingPlayerID == userId)
+            {
+                isMyTurn = true;
+                $('#turnDialog').html("It's your turn.");
+            }
+            else
+            {
+                isMyTurn = false;
+                $('#turnDialog').html("Waiting for " + opponentFirstName);
+            }
+
+            curAppRequest = data.curAppRequest;
+
+            if (data.CallengerID == userId)
+            {  
+                fill = "#60af75";
+                userFBID = data.ChallengerFBID;
+                userFirstName = data.ChallengerFirstName;
+                userLastName = data.ChallengerLastName;
+                opponentFBID = data.OpponentFBID;
+                opponentFirstName = data.OpponentFirstName;
+                opponentLastName = data.OpponentLastName;
+            }
+            else
+            {
+                fill = "#bb2e36";
+                opponentFBID = data.ChallengerFBID;
+                opponentFirstName = data.ChallengerFirstName;
+                opponentLastName = data.ChallengerLastName;
+                userFBID = data.OpponentFBID;
+                userFirstName = data.OpponentFirstName;
+                userLastName = data.OpponentLastName;
+            }
+
             $('#board').children().remove();
 
             $.get("/game/" + gameId + "/moves", function (data) {
-                game = new DartBoard(null, playMove, data);
+                game = new DartBoard(null, playMove, data); 
             }, "json");
-
         });
     }  
 
     (function () {
         var e = document.createElement('script');
         e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js#xfbml=1';
-        //e.src = document.location.protocol + '//cbeta.grosocial.com/assets/js/facebook/en_US_all_3.js#xfbml=1'; // Load a cached version for now
         e.async = true;
         document.getElementById('fb-root').appendChild(e);
     } ());
@@ -302,4 +371,7 @@ Search: <input id="searchText" type="text" />
 
 <h2 id="winner"></h2>
 
+<h3 id="turnDialog"></h3>
+
 <div id="board" style="width:500px; height:500px;"></div>
+
