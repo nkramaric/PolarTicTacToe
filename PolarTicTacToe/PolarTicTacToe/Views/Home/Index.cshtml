@@ -127,25 +127,25 @@
         $.get("/games", null, function(data){    
             activeGames = data;
             for (var i = 0; i < activeGames.length; i++){
-                var friendID = -1;
+                var friendFBID = -1;
                 var status = "";
 
                 if (activeGames[i].PendingPlayerFBID == @UserFacebookID){
                     if (activeGames[i].ChallengerFBID == @UserFacebookID){
-                        friendID = activeGames[i].OpponentFBID;
+                        friendFBID = activeGames[i].OpponentFBID;
                     }else{
-                        friendID = activeGames[i].ChallengerFBID;
+                        friendFBID = activeGames[i].ChallengerFBID;
                     }
-                    status = "waiting";
-                }else{
                     status = "your turn";
-                    friendID = activeGames[i].PendingPlayerFBID;     
+                }else{
+                    status = "waiting";
+                    friendFBID = activeGames[i].PendingPlayerFBID;     
                 }
 
-                $('#contact-' + friendID + " a").html(status);
-                $('#contact-' + friendID + " a").attr('data-game-id', activeGames[i].ID);
-
-                $('#contact-' + friendID + " a").click(function(){
+                $('#contact-' + friendFBID + " a").html(status);
+                $('#contact-' + friendFBID + " a").attr('data-game-id', activeGames[i].ID);
+                $('#contact-' + friendFBID + " a").unbind('click');
+                $('#contact-' + friendFBID + " a").click(function(){
                     var gameId = parseInt($(this).attr('data-game-id'));
                     LoadGame(gameId);
                 });
@@ -246,13 +246,14 @@
 
                 game.setMoves(data.moves);
                 game.draw();
-                    if (data.winner != null){
-                        if (data.winner == userId){
-                            $('#winner').html("You are the winner!");
-                        }else{
-                            $('#winner').html("You lose!");
-                        }
+
+                if (data.winner != null){
+                    if (data.winner == userId){
+                        $('#winner').html("You are the winner!");
+                    }else{
+                        $('#winner').html("You lose!");
                     }
+                }
             }, "json");
 
         }
