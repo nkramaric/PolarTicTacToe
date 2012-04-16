@@ -98,7 +98,7 @@ namespace PolarTicTacToe.Models
                     return new List<Move>();
                 }
 
-                CultureInfo provider = CultureInfo.InvariantCulture;
+                //CultureInfo provider = CultureInfo.InvariantCulture;
                 var splitMoves = Moves.Split(new char[]{','}, StringSplitOptions.RemoveEmptyEntries);
                 var MoveList = new List<Move>();
                 int? userID = ChallengerID;
@@ -108,7 +108,7 @@ namespace PolarTicTacToe.Models
                     string[] splitMove = curMove.Split(';');
                     int x = int.Parse(splitMove[0]);
                     int y = int.Parse(splitMove[1]);
-                    DateTime time = DateTime.Parse(splitMove[2], provider);
+                    DateTime time = DateTime.Parse(splitMove[2]);
                     MoveList.Add(new Move() { position = new Coordinate(x, y), time = time, UserID = userID.Value });
                     userID = userID == ChallengerID ? OpponentID : ChallengerID;
                 }

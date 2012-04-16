@@ -31,42 +31,10 @@
     $(document).ready(function () {
 
         setInterval(function () {
-        
             //UpdateFriendsList();
-
-            if(game != null && gameId!= null)
-            {
-                $.get("/game/" + gameId + "/moves", function (data) {
-                
-                curAppRequest = data.curAppRequest;
-                //console.log(data);
-                game.PendingPlayerID = data.PendingPlayerID;
-                if (game.PendingPlayerID == userId)
-                {    
-                    isMyTurn = true;
-                    $('#turnDialog').html("It's your turn.");
-                }
-                else
-                {
-                    isMyTurn = false;
-                    $('#turnDialog').html("Waiting for " + opponentFirstName);
-                }
-
-                game.setMoves(data.moves);
-                game.draw();
-                    if (data.winner != null){
-                        if (data.winner == userId){
-                            $('#winner').html("You are the winner!");
-                        }else{
-                            $('#winner').html("You lose!");
-                        }
-                    }
-                }, "json");
-
-            }
+            UpdateGame();
         }, 5000);
        
-
         window.fbAsyncInit = function () {
             FB.init({
                 appId: fbAppID,
@@ -269,8 +237,44 @@
                     }
                 }
             });
+
+            UpdateGame();
         }
     }
+
+     function UpdateGame()
+       {
+            if(game != null && gameId!= null)
+            {
+                $.get("/game/" + gameId + "/moves", function (data) {
+                
+                curAppRequest = data.curAppRequest;
+                //console.log(data);
+                game.PendingPlayerID = data.PendingPlayerID;
+                if (game.PendingPlayerID == userId)
+                {    
+                    isMyTurn = true;
+                    $('#turnDialog').html("It's your turn.");
+                }
+                else
+                {
+                    isMyTurn = false;
+                    $('#turnDialog').html("Waiting for " + opponentFirstName);
+                }
+
+                game.setMoves(data.moves);
+                game.draw();
+                    if (data.winner != null){
+                        if (data.winner == userId){
+                            $('#winner').html("You are the winner!");
+                        }else{
+                            $('#winner').html("You lose!");
+                        }
+                    }
+                }, "json");
+
+            }
+       }
 
     function LoadGame(id) {
         gameId = id;
