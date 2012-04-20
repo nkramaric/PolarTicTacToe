@@ -29,7 +29,7 @@
     var game;
     var fill;
     var player1Fill = "#60af75";
-    var plater2Fill = "#bb2e36";
+    var player2Fill = "#bb2e36";
     var winFill = "00FFFB";
     var friendGameStatus;
     var activeGames;
@@ -352,19 +352,39 @@
 @ViewBag.access_token
 
 @*&scope=publish_stream*@
-<a id="registerLink" href="https://www.facebook.com/dialog/oauth?client_id=@PolarTicTacToe.Utils.GlobalVars.FB_APP_ID&redirect_uri=@PolarTicTacToe.Utils.GlobalVars.WEBSITE_URL">Register</a>
 
-<img id="image"/>  
-<p id="name" style="padding-bottom:7px; font-weight:bold; font-size:13px;" color="white"></p>
+<table border="1">
+    <tr>
+        <td>
+            <a id="registerLink" href="https://www.facebook.com/dialog/oauth?client_id=@PolarTicTacToe.Utils.GlobalVars.FB_APP_ID&redirect_uri=@PolarTicTacToe.Utils.GlobalVars.WEBSITE_URL">Register</a>
+            <img id="image"/>  
+            <p id="name" style="padding-bottom:7px; font-weight:bold; font-size:13px;" color="white"></p>
+        </td>
+        <td>
+            <h1>Spiral Tic Tac Toe</h1>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Search: <input id="searchText" type="text" />
 
-Search: <input id="searchText" type="text" />
+            <ul id="friends">
+            </ul>
+        </td>
+        <td>
+            <h2 id="winner"></h2>
 
-<ul id="friends">
-</ul>
+            <h3 id="turnDialog"></h3>
 
-<h2 id="winner"></h2>
+            <div id="board" style="width:500px; height:500px;"></div>
+        </td>
+    </tr>
+</table>
 
-<h3 id="turnDialog"></h3>
 
-<div id="board" style="width:500px; height:500px;"></div>
+
+
+
+
+
 
