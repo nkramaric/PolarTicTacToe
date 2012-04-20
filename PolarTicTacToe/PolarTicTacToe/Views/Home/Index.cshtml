@@ -109,11 +109,14 @@
         FB.api('/me/friends', function (friends) { 
 
             var friendSource = $.map(friends.data, function(val, i){
-                return {
+            return {
+                    label: val.name,
                     value: val.id,
+                    gameID: -1,
+                    gameState: "Invite",
                 };
             });
-                       
+
             var fbids = [];
 
             for (var i = 0; i < friends.data.length; i++){
@@ -128,11 +131,11 @@
                 }
             }
 
-            SetFriendsGames();
+            SetFriendsGames(friendSource);
         });
     }
 
-    function SetFriendsGames(){
+    function SetFriendsGames(friendSource){
         
         $.get("/games", null, function(data){    
             activeGames = data;
@@ -146,10 +149,24 @@
                     }else{
                         friendFBID = activeGames[i].ChallengerFBID;
                     }
-                    status = "your turn";
+                    status = "your turn"; 
+                    $.each(friendSource, function (j, friend) {
+                        if (friend.value == friendFBID)
+                        {
+                            friend.gameID = activeGames[i].ID;
+                            friend.gameState = "your turn";
+                        }
+                    });  
                 }else{
                     status = "waiting";
-                    friendFBID = activeGames[i].PendingPlayerFBID;     
+                    friendFBID = activeGames[i].PendingPlayerFBID; 
+                      $.each(friendSource, function (j, friend) {
+                        if (friend.value == friendFBID)
+                        {
+                            friend.gameID = activeGames[i].ID;
+                            friend.gameState = "waiting";
+                        }
+                    });    
                 }
 
                 $('#contact-' + friendFBID + " a").html(status);
@@ -162,6 +179,31 @@
 
                 gamesHash[activeGames[i].ID] = activeGames[i];
             }
+
+             
+            // update autocomplete
+            $("#searchText").autocomplete({
+                source: friendSource,
+                select: function(event, item) {
+                if(item.item.gameID == -1)
+                {
+                    Invite(item.item.value);
+                }
+                else 
+                { 
+                    LoadGame(item.item.gameID);
+                }
+                return false;
+                },
+            }).data("autocomplete")._renderItem = function (ul, item) {
+                return $("<li></li>")
+                .data("item.autocomplete", item)
+                .append('<a><div><h4>' + item.label + '</h4></div><div>' + item.gameState + '</div></a>')
+                .appendTo(ul);
+            };
+
+
+
             //console.log(data);
         }, "json");
     }
