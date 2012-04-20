@@ -28,6 +28,9 @@
     var userId = @UserID;
     var game;
     var fill;
+    var player1Fill = "#60af75";
+    var plater2Fill = "#bb2e36";
+    var winFill = "00FFFB";
     var friendGameStatus;
     var activeGames;
     var friendGameStatus;
@@ -46,7 +49,7 @@
                 status: true, // check login status
                 cookie: true, // enable cookies to allow the server to access the session
                 //channelUrl: window.location.protocol + "//" + window.location.hostname + "/fbchannel.html",
-                channelUrl: 'http://ec2-23-21-169-98.compute-1.amazonaws.com/channel.html', // Channel File
+                //channelUrl: 'http://ec2-23-21-169-98.compute-1.amazonaws.com/channel.html', // Channel File
                 oauth: true, //enables OAuth 2.0
                 frictionlessRequests : true,
             });
@@ -209,32 +212,38 @@
     }  
 
     function playMove(x, y, section) {
-        if(isMyTurn)
-        {
-            isMyTurn = false;
-            DeleteAppRequest(curAppRequest + '_' + userFBID);
+       var curFill = section.attrs.fill;
 
-            $.post("/game/" + gameId + "/playmove", { x: x, y: y }, function (data) {
-                if (data.isValid == true) 
-                {
-                    section.attr({ fill: fill });
-                }
-                if (data.winner != null){
-                    $('#turnDialog').html("");
-                    if (data.winner == userId) {
-                        $('#winner').html("You are the winner!");
-                    }else{
-                        $('#winner').html("You lose!");
-                    }
-                }
-                else
-                {
-                    if(!data.fistMove)
-                        SendMoveAppRequest(opponentFBID)
-                }
-            });
+       if(curFill != player1Fill && curFill != player2Fill)
+       {
+            if(isMyTurn)
+            {
+                isMyTurn = false;
+                DeleteAppRequest(curAppRequest + '_' + userFBID);
 
-            UpdateGame();
+                $.post("/game/" + gameId + "/playmove", { x: x, y: y }, function (data) {
+                    if (data.isValid == true) 
+                    {
+                        section.attr({ fill: fill });
+               
+                        if (data.winner != null){
+                            $('#turnDialog').html("");
+                            if (data.winner == userId) {
+                                $('#winner').html("You are the winner!");
+                            }else{
+                                $('#winner').html("You lose!");
+                            }
+                        }
+                        else
+                        {
+                            if(!data.fistMove)
+                                SendMoveAppRequest(opponentFBID)
+                        }
+                   }
+                });
+
+                UpdateGame();
+            }
         }
     }
 
@@ -283,7 +292,7 @@
 
         if (data.ChallengerID == userId)
         {  
-            fill = "#60af75";
+            fill = player1Fill;
             userFBID = data.ChallengerFBID;
             userFirstName = data.ChallengerFirstName;
             userLastName = data.ChallengerLastName;
@@ -296,7 +305,7 @@
         }
         else
         {
-            fill = "#bb2e36";
+            fill = player2Fill;
             opponentFBID = data.ChallengerFBID; 
             if (data.ChallengerFirstName != null)
                 opponentFirstName = data.ChallengerFirstName;
