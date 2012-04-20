@@ -15,7 +15,7 @@ namespace PolarTicTacToe.Models.API
         public long? OpponentFBID;
         public string OpponentFirstName;
         public string OpponentLastName;
-        public string Moves;
+        public List<Move> Moves;
         public int? WinnerID;
         public string GameState;
         public long? curAppRequest;

@@ -215,6 +215,7 @@
             DeleteAppRequest(curAppRequest + '_' + userFBID);
 
             $.post("/game/" + gameId + "/playmove", { x: x, y: y }, function (data) {
+                console.log(data);
                 if (data.isValid == true) 
                 {
                     section.attr({ fill: fill });
@@ -321,9 +322,12 @@
 
         $('#board').children().remove();
 
-        $.get("/game/" + gameId + "/moves", function (data) {
-            game = new DartBoard(null, playMove, data); 
-        }, "json");
+        game = new DartBoard(null, playMove, data); 
+        game.setMoves(data.Moves);
+
+//        $.get("/game/" + gameId + "/moves", function (data) {
+//            game = new DartBoard(null, playMove, data); 
+//        }, "json");
     }  
 
     (function () {

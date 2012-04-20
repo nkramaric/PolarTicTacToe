@@ -87,7 +87,6 @@ namespace PolarTicTacToe.Models
 
         }
 
-
         internal List<Move> MoveList
         {
             get
@@ -181,7 +180,7 @@ namespace PolarTicTacToe.Models
             newGame.OpponentFBID = this.Opponent.FacebookID;
             newGame.OpponentFirstName = this.Opponent.FirstName;
             newGame.OpponentLastName = this.Opponent.LastName;
-            newGame.Moves = Moves;
+            newGame.Moves = MoveList;
             newGame.WinnerID = WinnerID;
             newGame.GameState = GameState;
             newGame.curAppRequest = CurAppRequest;
