@@ -85,7 +85,7 @@
                         image.src = 'http://graph.facebook.com/' + user.id + '/picture'
                         var name = document.getElementById('name');
                         if (user.name !== undefined) {
-                            name.innerHTML = "Welcome " + user.name;
+                            name.innerHTML = user.name;
                             userFBID = user.id;
                             $("#registerLink").hide();
 
@@ -100,7 +100,7 @@
     });
 
     $.template("Contact", '<li id="contact-${id}"> ' +
-    '<h4>${name}</h4>' +
+    '<span>${name}</span> ' +
     '<a href="#" data-fbid="${id}" data-game-id="-1">${status}</a>' +
     '</li> ');
 
@@ -348,27 +348,34 @@
 
 </script>
 
-<h2>Template</h2>
-<p>
-	Konrad Group Template
-</p>
+<div class="left-panel">
 
-@ViewBag.access_token
+    @ViewBag.access_token
 
-@*&scope=publish_stream*@
-<a id="registerLink" href="https://www.facebook.com/dialog/oauth?client_id=@PolarTicTacToe.Utils.GlobalVars.FB_APP_ID&redirect_uri=@PolarTicTacToe.Utils.GlobalVars.WEBSITE_URL">Register</a>
+    
+    <div class="profile">
+        <a id="registerLink" href="https://www.facebook.com/dialog/oauth?client_id=@PolarTicTacToe.Utils.GlobalVars.FB_APP_ID&redirect_uri=@PolarTicTacToe.Utils.GlobalVars.WEBSITE_URL">Register</a>
 
-<img id="image"/>  
-<p id="name" style="padding-bottom:7px; font-weight:bold; font-size:13px;" color="white"></p>
+        <img id="image"/>  
+        <p class="name" id="name" style=""></p>
+    </div>
+    <div class="clear"></div>
+    
+    <div class="search">
+        <input id="searchText" type="text" />
+    </div>
 
-Search: <input id="searchText" type="text" />
+    <div class="friends">
+        <ul id="friends">
+        </ul>
+    </div>
 
-<ul id="friends">
-</ul>
+</div>
 
-<h2 id="winner"></h2>
+<div class="game">
+    <h2 id="winner"></h2>
 
-<h3 id="turnDialog"></h3>
+    <h3 id="turnDialog"></h3>
 
-<div id="board" style="width:500px; height:500px;"></div>
-
+    <div id="board" style="width:500px; height:500px;"></div>
+</div>

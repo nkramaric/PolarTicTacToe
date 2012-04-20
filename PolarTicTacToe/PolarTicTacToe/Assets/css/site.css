@@ -8,3 +8,87 @@
 {
     margin-top: 60px;
 }
+
+.left-panel
+{
+    float:left;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius:5px;
+    height:550px;  
+}
+
+.game
+{
+    float:left;
+    margin-left: 10px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    height:550px;   
+    border-radius:5px;
+}
+
+.profile
+{
+    overflow:auto;
+    position: relative;
+    height: 50px;
+    padding:0px;
+    margin:10px;
+    margin-bottom:20px;    
+}
+
+.profile img
+{
+    position: absolute;
+    left: 0px;
+}
+
+.name
+{
+    position: absolute;
+    
+    bottom: 0px;
+    margin: 0px;
+    text-align: center;
+    top: 40%; 
+    font-weight:bold;
+    left:60px;
+}
+
+div.clear
+{
+   clear:both; 
+}
+
+.search input
+{
+    margin-left: 6px;
+    margin-right:auto;
+}
+
+.friends ul
+{
+    list-style-type: none;
+    margin:0px;
+    padding:0px;   
+}
+
+.friends li
+{
+    padding:5px;
+    margin:5px; 
+    border-bottom:1px dashed #ddd;
+    overflow:auto; 
+}
+.friends li span
+{
+    float:left;
+}
+
+.friends li a
+{
+    padding-left:10px;
+    float:right;
+    padding-right:5px;
+}

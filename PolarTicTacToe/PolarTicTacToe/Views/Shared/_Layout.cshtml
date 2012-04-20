@@ -9,9 +9,12 @@
 	<link href="@Url.Content("~/Assets/css/site.css")" rel="stylesheet" type="text/css" />
 
 
-    <link type="text/css" href="@Url.Content("~/Assets/css/ui-lightness/jquery-ui-1.8.18.custom.css")" rel="stylesheet" />	
-    <script type="text/javascript" src="@Url.Content("~/Assets/js/jquery-1.7.1.min.js")"></script>
-    <script type="text/javascript" src="@Url.Content("~/Assets/js/jquery-ui-1.8.18.custom.min.js")"></script>
+    <link type="text/css" href="@Url.Content("~/Assets/css/ui-lightness/jquery-ui-1.8.18.custom.css")" rel="stylesheet" />	
+
+    <script type="text/javascript" src="@Url.Content("~/Assets/js/jquery-1.7.1.min.js")"></script>
+
+    <script type="text/javascript" src="@Url.Content("~/Assets/js/jquery-ui-1.8.18.custom.min.js")"></script>
+
    @*<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>*@
 
     <!--[if lt IE 9]>
@@ -42,10 +45,6 @@
 
 	<div class="container-fluid main-content">
 		@RenderBody()
-
-		<footer>
-			&copy; @DateTime.Now.Year
-		</footer>
 	</div>
 
 	<script src="@Url.Content("~/Assets/bootstrap/js/bootstrap.min.js")" type="text/javascript"></script>
