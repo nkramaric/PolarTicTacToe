@@ -46,7 +46,6 @@ namespace PolarTicTacToe.Utils
             //checking both spirals
             return outer1
                 || outer2;
-
         }
 
         private bool CheckVertical(Game game)

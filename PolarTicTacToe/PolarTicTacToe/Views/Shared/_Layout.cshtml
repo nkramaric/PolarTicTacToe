@@ -23,25 +23,7 @@
 	@RenderSection("ExtraHeaderContent", required: false)
 </head>
 <body>
-    <div class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container-fluid">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          <a class="brand" href="/">Konrad Group Template</a>
-          <div class="nav-collapse">
-            <ul class="nav">
-              <li class="active">@Html.ActionLink("Home", "Index", "Home")</li>
-			  <li>@Html.ActionLink("About", "About", "Home")</li>
-            </ul>
-            <p class="navbar-text pull-right">@Html.Partial("_LogOnPartial")</p>
-          </div><!--/.nav-collapse -->
-        </div>
-      </div>
-    </div>
+    
 
 	<div class="container-fluid main-content">
 		@RenderBody()

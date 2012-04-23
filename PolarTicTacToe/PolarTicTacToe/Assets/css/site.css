@@ -92,3 +92,9 @@ div.clear
     float:right;
     padding-right:5px;
 }
+
+.title
+{
+    padding:10px;
+    margin-bottom:20px;   
+}

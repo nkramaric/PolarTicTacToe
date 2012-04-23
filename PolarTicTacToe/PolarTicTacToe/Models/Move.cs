@@ -11,5 +11,6 @@ namespace PolarTicTacToe.Models
         public int? UserID;
         public Coordinate position;
         public DateTime time;
+        public bool isWinner;
     }
 }
